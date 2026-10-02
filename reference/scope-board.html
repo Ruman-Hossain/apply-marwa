@@ -1,0 +1,452 @@
+<title>Marwa Portal Scope Board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Noto+Sans:wght@400;600;700&display=swap">
+
+<style>
+/* Layout: domain tables of feature rows; status column, then a tick column
+   the viewer owns. Palette and faces match the teardown and the checklist. */
+:root{
+  --bg:#FBFAF7; --surface:#FFFFFF; --alt:#F3F1EC; --line:#E3E0D9;
+  --ink:#0B2239; --muted:#5B6B7C; --accent:#A93A2C; --ok:#1F7A4D; --warn:#9A6B10;
+  --display:"Manrope","Segoe UI",system-ui,sans-serif;
+  --body:"Noto Sans","Segoe UI",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --bg:#0B1622; --surface:#122232; --alt:#16293B; --line:#263E54;
+  --ink:#E8EEF4; --muted:#96A9BB; --accent:#E68371; --ok:#55C48C; --warn:#D9A441;
+  color-scheme:dark; } }
+:root[data-theme="dark"]{
+  --bg:#0B1622; --surface:#122232; --alt:#16293B; --line:#263E54;
+  --ink:#E8EEF4; --muted:#96A9BB; --accent:#E68371; --ok:#55C48C; --warn:#D9A441;
+  color-scheme:dark; }
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1240px;margin:0 auto;padding-inline:20px}
+.col{max-width:68ch}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance}
+h1{font-size:clamp(28px,5vw,42px);line-height:1.1;letter-spacing:-.02em;font-weight:800}
+h2{font-size:clamp(19px,2.6vw,23px);line-height:1.25;font-weight:700}
+p{margin:0}
+a{color:var(--accent)}
+.eyebrow{font-family:var(--display);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+header.top{background:#0B2239;color:#F4F7FA;padding-block:clamp(34px,6vw,54px)}
+:root[data-theme="dark"] header.top,:root:not([data-theme="light"]) header.top{background:#071019}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) header.top{background:#0B2239}}
+header.top h1{color:#fff}
+header.top .eyebrow{color:#93A9BE}
+header.top p{color:#C6D4E0;margin-top:12px}
+
+.counts{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.14);border-radius:12px;overflow:hidden;margin-top:26px}
+.counts div{background:#0B2239;padding:15px 17px}
+:root[data-theme="dark"] .counts div,:root:not([data-theme="light"]) .counts div{background:#071019}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .counts div{background:#0B2239}}
+.counts b{display:block;font-family:var(--display);font-size:25px;line-height:1.15;color:#fff;font-variant-numeric:tabular-nums}
+.counts span{display:block;font-size:12px;color:#93A9BE;margin-top:2px}
+.counts .sel b{color:#55C48C}
+
+#status{margin-top:18px;font-size:13.5px;color:#93A9BE}
+
+.toolbar{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line);padding-block:12px;margin-bottom:4px}
+.toolbar .wrap{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface)}
+.seg button{padding:7px 13px;font-size:13.5px;font-family:var(--body);border:0;border-right:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.hint{font-size:13.5px;color:var(--muted)}
+
+section{padding-block:26px;border-bottom:1px solid var(--line)}
+.dhead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:4px}
+.dnum{font-family:var(--display);font-size:13px;font-weight:800;color:var(--accent)}
+.dnote{color:var(--muted);font-size:14.5px;margin-bottom:16px;max-width:72ch}
+
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{width:100%;border-collapse:collapse;min-width:720px}
+th{text-align:left;font-family:var(--display);font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);padding:12px 14px;border-bottom:1px solid var(--line);background:var(--alt);font-weight:700}
+td{padding:11px 14px;border-top:1px solid var(--line);vertical-align:top;font-size:14.5px;line-height:1.5}
+tbody tr:first-child td{border-top:0}
+th.c-f,td.c-f{width:27%}
+th.c-s,td.c-s{width:120px;white-space:nowrap}
+th.c-w,td.c-w{width:92px;text-align:center}
+td.c-f b{display:block;font-weight:600;color:var(--ink)}
+td.c-d{color:var(--muted)}
+
+.pill{display:inline-block;font-family:var(--display);font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:3px 9px;border-radius:20px;border:1px solid currentColor}
+.p-built{color:var(--ok)}
+.p-open{color:var(--muted)}
+.p-block{color:var(--warn)}
+.p-never{color:var(--muted);opacity:.65}
+
+.tick{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;cursor:pointer}
+.tick input{width:18px;height:18px;accent-color:var(--accent);cursor:pointer}
+.tick.off{opacity:.3;cursor:default}
+tr.want td{background:color-mix(in srgb,var(--accent) 7%,transparent)}
+tr.never td.c-f b{color:var(--muted);font-weight:500}
+
+.callout{background:var(--alt);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:10px;padding:15px 17px;font-size:15px;margin-bottom:22px}
+.callout strong{font-family:var(--display)}
+footer{padding-block:34px;color:var(--muted);font-size:14px}
+@media(max-width:640px){ .toolbar{position:static} }
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <span class="eyebrow">apply.marwaoverseas.com · scope board</span>
+    <h1>What a job portal has, and what we have</h1>
+    <p class="col">Every feature area of a full recruitment platform, grouped the way a system would actually be designed. Each row says whether it exists today. Tick anything you want built — the ticks are saved, so you can close this and come back.</p>
+    <div class="counts">
+      <div><b id="c-total">—</b><span>Features listed</span></div>
+      <div><b id="c-built">—</b><span>Built</span></div>
+      <div><b id="c-open">—</b><span>Not built</span></div>
+      <div><b id="c-never">—</b><span>Not recommended</span></div>
+      <div class="sel"><b id="c-sel">—</b><span>You ticked</span></div>
+    </div>
+    <p id="status">Loading your ticks…</p>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="wrap">
+    <span class="hint">Show</span>
+    <span class="seg" role="group" aria-label="Filter rows">
+      <button type="button" data-f="all" aria-pressed="true">Everything</button>
+      <button type="button" data-f="open" aria-pressed="false">Not built</button>
+      <button type="button" data-f="built" aria-pressed="false">Built</button>
+      <button type="button" data-f="want" aria-pressed="false">My ticks</button>
+    </span>
+    <span class="hint" id="savenote"></span>
+  </div>
+</div>
+
+<div class="wrap" style="padding-top:24px">
+  <div class="callout col">
+    <strong>How to read the status column.</strong> <span class="pill p-built">Built</span> is on the site now. <span class="pill p-open">Open</span> is not built and can be. <span class="pill p-block">Blocked</span> is built but not working for a reason outside the code. <span class="pill p-never">Advise against</span> is something a job board has that a licensed recruiting agency should not — the reason is in the row, and you can still tick it if you disagree.
+  </div>
+</div>
+
+<main id="board"></main>
+
+<footer>
+  <div class="wrap col">
+    <p>Ticks are saved against this page, not in your browser, so they survive a reload and I can read them back when you want the next build planned.</p>
+  </div>
+</footer>
+
+<script>
+const DOMAINS = [
+ {n:1,t:"Identity and access",note:"Who gets in, as what, and how that is proved. Everything else hangs off this, so it is first.",rows:[
+  ["id-reg","Candidate registration","Mobile number and email, with a honeypot and rate limiting","built"],
+  ["id-verify","Email confirmation by code","30-minute expiry, 8-failure lockout, deliberately vague errors","built"],
+  ["id-rbac","Role-based permissions","Candidate, staff, manager, employer — enforced in code, not just hidden in the UI","built"],
+  ["id-empreg","Employer self-registration","Public enquiry form creating a pending record","built"],
+  ["id-empapprove","Employer approval by admin","Activation blocked until required documents are accepted","built"],
+  ["id-reset","Password reset","Forgot-password by emailed link","open"],
+  ["id-otp","Login by SMS code","No password at all — the pattern most of this audience already uses for bKash","open"],
+  ["id-social","Google or Facebook sign-in","Fewer forgotten passwords; adds a third-party dependency","open"],
+  ["id-2fa","Two-factor for staff","Wordfence can do this; it is a settings job, not a build","open"],
+  ["id-sessions","Session and device list","See where an account is signed in, and sign other devices out","open"],
+  ["id-selfdelete","Account deletion by the candidate","With a clear statement of what is erased and what is kept for audit","open"],
+ ]},
+ {n:2,t:"Candidate profile",note:"The record Marwa actually sells. Depth here is what distinguishes an agency from a noticeboard.",rows:[
+  ["pr-sections","Sectioned profile with navigation","Seven sections, left rail, tab-safe saving","built"],
+  ["pr-edu","Education history","Repeatable, with the Bangladeshi certificate ladder","built"],
+  ["pr-train","Training courses","TTC and private courses","built"],
+  ["pr-cert","Certificates and exams","JFT-Basic, JLPT, SSW skills tests, BMET, BNMC, Prometric, Dataflow","built"],
+  ["pr-work","Work history","Employer, country, role, dates","built"],
+  ["pr-skills","Skills with level and years","","built"],
+  ["pr-ref","References","","built"],
+  ["pr-lang","Language levels","Japanese and English, on the ladders that matter","built"],
+  ["pr-travel","Passport and travel readiness","Status, number, available-from date","built"],
+  ["pr-body","Height, weight, blood group","For the medical and for kit sizing","built"],
+  ["pr-complete","Completeness scoring","Weighted, with the next missing thing named","built"],
+  ["pr-vis","Visibility control","Whether Marwa may show the file to employers","built"],
+  ["pr-cv","CV generated from the profile","No writing required of the candidate","built"],
+  ["pr-cvdl","CV download as PDF","Through the browser, so Bangla and Japanese render correctly","built"],
+  ["pr-vault","Document vault","Outside the web root, random filenames, permission-checked","built"],
+  ["pr-cvtpl","CV templates per destination","A Japanese employer expects a different document from a Gulf one","open"],
+  ["pr-video","Video CV","Strongest single idea for Japan; costs storage, upload and moderation","open"],
+  ["pr-expiry","Document expiry reminders","Tell someone their passport or medical lapses in 60 days","open"],
+  ["pr-parse","Build a profile from an uploaded CV","Parse a PDF and pre-fill; saves a lot of typing on a phone","open"],
+  ["pr-photo","Profile photograph","Employers ask; it also makes the CV look finished","open"],
+ ]},
+ {n:3,t:"Job catalogue",note:"How a vacancy is created, described and retired. The structure here is what makes search and matching possible at all.",rows:[
+  ["jc-wizard","Four-step posting wizard","Vacancy, pay and conditions, who can apply, review","built"],
+  ["jc-req","Structured requirements","Age, experience, passport, languages, named exams","built"],
+  ["jc-ben","Overseas benefits set","Accommodation, food, tickets, overtime, end-of-service — not office perks","built"],
+  ["jc-pay","Pay with a hide switch","Recorded internally even when not shown","built"],
+  ["jc-state","Vacancy state machine","Draft, open, closed, filled, archived","built"],
+  ["jc-count","Positions count","A vacancy for forty is a different proposition from one for one","built"],
+  ["jc-empdraft","Employer-submitted drafts","Always a draft; staff complete and publish","built"],
+  ["jc-dup","Duplicate a vacancy","Most postings are a near-copy of the last one","open"],
+  ["jc-tpl","Templates per trade","Pre-filled requirements for a welder, a carer, a driver","open"],
+  ["jc-import","Bulk import from a spreadsheet","For a demand letter covering forty roles at once","open"],
+  ["jc-i18n","Vacancies in Bangla as well as English","","open"],
+  ["jc-approval","Approval step before a vacancy goes live","A second pair of eyes on anything carrying the licence number","open"],
+ ]},
+ {n:4,t:"Search and discovery",note:"How somebody finds the one job they can actually take, on a metered connection.",rows:[
+  ["se-kw","Keyword search","","built"],
+  ["se-facet","Faceted filters with counts","Destination, trade, contract, closing, posted, age, no-experience","built"],
+  ["se-exact","Counts that respect other filters","Tap a number and you get exactly that many","built"],
+  ["se-narrow","Type-to-narrow inside long facets","","built"],
+  ["se-sort","Sort and page size","Newest, closing soonest, A–Z","built"],
+  ["se-views","List and grid","","built"],
+  ["se-hover","Requirements preview on the card","Overlays rather than reflowing the row","built"],
+  ["se-nojs","Works with JavaScript off","Every filter is a link; every state is in the URL","built"],
+  ["se-save","Keep a job for later","","built"],
+  ["se-savedsearch","Saved searches","Lower value until the board is large","open"],
+  ["se-similar","Similar jobs on a posting","","open"],
+  ["se-reco","Jobs recommended to me","Ranked against the profile rather than filtered","open"],
+  ["se-recent","Recently viewed","","open"],
+  ["se-auto","Search autocomplete","Trade names, destinations","open"],
+  ["se-seourl","Readable filter URLs","/jobs/japan/welder rather than a query string — matters for search traffic","open"],
+ ]},
+ {n:5,t:"Application pipeline",note:"The part a marketplace does not have. Marwa moves the file, so Marwa can show where it is.",rows:[
+  ["ap-apply","Apply from the profile","One tap; no re-typing","built"],
+  ["ap-cv","Attach a CV when applying","","built"],
+  ["ap-elig","Free eligibility checklist","What you still need, before you apply, never blocking","built"],
+  ["ap-dupe","One application per person per vacancy","Enforced in the database, not just the form","built"],
+  ["ap-withdraw","Withdraw an application","","built"],
+  ["ap-stages","Ten-stage pipeline","Received through to deployed, with candidate-facing wording","built"],
+  ["ap-audit","Full audit log","Who moved what, when, and why","built"],
+  ["ap-interview","Interview date, time and place","Shown to the candidate","built"],
+  ["ap-bulk","Bulk stage changes","Move thirty files at once after an employer decision","open"],
+  ["ap-reasons","Rejection reason library","Consistent, reportable, and kinder than free text","open"],
+  ["ap-offer","Offer letter generation","","open"],
+  ["ap-deploy","Deployment record","Flight, arrival, in-country contact — the file does not end at visa","open"],
+  ["ap-followup","Post-deployment follow-up","Did they arrive, are they being paid. The strongest trust signal an agency can build.","open"],
+ ]},
+ {n:6,t:"Employer workspace",note:"What the other side of the transaction sees. Narrower than a marketplace on purpose.",rows:[
+  ["em-area","Employer area with sign-in routing","","built"],
+  ["em-profile","Company profile, editable in part","Compliance fields stay read-only","built"],
+  ["em-docs","Document vetting with an admin-defined list","You decide what is compulsory","built"],
+  ["em-compliance","Compliance record","Demand letter, attestation, agreement","built"],
+  ["em-forward","Candidates put forward, with CVs","Shortlisted onward only","built"],
+  ["em-nocontact","Contact details withheld","The inversion of the marketplace model","built"],
+  ["em-submit","Submit a vacancy as a draft","","built"],
+  ["em-decide","Accept or decline a candidate in the portal","Currently done by email and recorded by staff","open"],
+  ["em-times","Propose interview times","","open"],
+  ["em-msg","Message Marwa inside the portal","Keeps the thread with the file","open"],
+  ["em-users","Several users on one employer account","","open"],
+  ["em-logo","Employer logo upload","","open"],
+  ["em-stats","Employer-facing statistics","How many put forward, how many deployed","open"],
+  ["em-browse","Let employers search the candidate database","Advise against: it turns Marwa into a database vendor and exposes workers to direct approach","never"],
+ ]},
+ {n:7,t:"Communications",note:"Currently the weakest layer in the system, and the one blocking everything else.",rows:[
+  ["co-mail","Transactional email","Confirmation codes, stage changes, alerts — configured but not delivering","blocked"],
+  ["co-alerts","Job alerts by trade","Built; shipped switched off until mail is proven","blocked"],
+  ["co-sms","SMS notifications","Reaches people who do not check email. For this audience, arguably more important than email.","open"],
+  ["co-wa","WhatsApp notifications","How this audience actually communicates","open"],
+  ["co-inbox","Notification centre inside the portal","Works even when email fails","open"],
+  ["co-tpl","Email templates editable by admin","So staff can change wording without a developer","open"],
+  ["co-thread","Candidate and staff messaging","Replaces the phone call that currently carries everything","open"],
+  ["co-bulk","Message a segment","All welders with passports, for example","open"],
+  ["co-log","Delivery log","What was sent, to whom, and whether it arrived","open"],
+ ]},
+ {n:8,t:"Content, SEO and reach",note:"How people arrive at all. Cheap, and almost entirely unbuilt.",rows:[
+  ["cn-guides","Guides section","Post type, index, menu, home band","built"],
+  ["cn-written","Four guides published","Fraud, Japan SSW, interviews, documents","built"],
+  ["cn-noindex","Private pages kept out of search","","built"],
+  ["cn-schema","JobPosting structured data","Gets vacancies into Google Jobs — the single highest-value SEO item for a job site","open"],
+  ["cn-sitemap","XML sitemap for vacancies and guides","","open"],
+  ["cn-og","Social share cards","Matters because sharing happens on WhatsApp and Facebook","open"],
+  ["cn-bangla","Bangla throughout","Doubles reach without a single new claim","open"],
+  ["cn-faq","FAQ pages","","open"],
+  ["cn-stories","Worker stories","Powerful and risky: only real, consented, verifiable ones","open"],
+ ]},
+ {n:9,t:"Analytics and reporting",note:"What the business cannot currently see about itself.",rows:[
+  ["an-pool","Pool counts by trade","Against open vacancies — answers whether a demand letter can be accepted","built"],
+  ["an-status","System status","Tables, roles, storage health","built"],
+  ["an-funnel","Placement funnel","Applications to deployments, by trade and destination","open"],
+  ["an-source","Where candidates come from","Search, referral, WhatsApp, walk-in","open"],
+  ["an-time","Time in each stage","Finds where files actually stall","open"],
+  ["an-staff","Staff activity","Who is moving files, and how quickly","open"],
+  ["an-export","Export to Excel","Every list, for anything the screens do not answer","open"],
+  ["an-sched","Scheduled reports by email","","open"],
+ ]},
+ {n:10,t:"Trust, safety and compliance",note:"For a licensed agency this is not a feature area. It is the product.",rows:[
+  ["tr-fraud","Anti-fraud notice on every posting","How the fraud works, and how to check the licence","built"],
+  ["tr-licence","Licence number displayed and explained","","built"],
+  ["tr-nofee","No-fee policy stated everywhere","","built"],
+  ["tr-acl","Document access control","Owner or permitted staff only","built"],
+  ["tr-root","Files stored outside the web root","","built"],
+  ["tr-caps","Capability checks in code","Not only hidden menus","built"],
+  ["tr-audit","Immutable audit trail","","built"],
+  ["tr-retain","Retention mechanism","Built and running; the period is unset, which is a decision nobody has made","blocked"],
+  ["tr-privacy","Privacy notice and consent capture","Record what each person agreed to, and when","open"],
+  ["tr-terms","Terms acceptance log","","open"],
+  ["tr-report","Report-a-fraud form","Currently the guide says tell Marwa, with no route to do it","open"],
+  ["tr-export","Candidate data export on request","","open"],
+  ["tr-erase","Right-to-erasure workflow","With a clear line on what must be kept for audit","open"],
+ ]},
+ {n:11,t:"Platform and operations",note:"Nobody asks for these. They are what decides whether the thing survives its second year.",rows:[
+  ["pf-schema","Custom tables with versioned migrations","Thirteen tables, eleven schema versions","built"],
+  ["pf-office","Multi-office scoping","Dhaka and Athens do not share a book of work","built"],
+  ["pf-tenant","Agency tenancy field","So a second agency never means a migration","built"],
+  ["pf-demo","Demo data tooling","Create and remove, with a verification audit","built"],
+  ["pf-rate","Rate limiting on sign-in","","built"],
+  ["pf-backup","Automated backups outside the web root","The single cheapest insurance available","open"],
+  ["pf-staging","A staging copy to test on","Currently every change is tested in production","open"],
+  ["pf-logs","Error logging and alerting","The mail fault went unnoticed for hours because nothing watches","open"],
+  ["pf-tests","Automated tests","","open"],
+  ["pf-ci","Deployment pipeline","Rather than uploading a zip by hand","open"],
+  ["pf-cache","Caching strategy","Not needed at this size; needed at ten times it","open"],
+  ["pf-wpjm","Replace WP Job Manager","Six hundred lines; removes a dependency once the wizard owns posting","open"],
+ ]},
+ {n:12,t:"Integrations",note:"What the portal talks to. Each one is a dependency, so each needs a reason.",rows:[
+  ["in-smtp","Transactional email provider","Connected to Brevo; not delivering","blocked"],
+  ["in-sms","SMS gateway","A Bangladeshi provider; the most useful integration available","open"],
+  ["in-wa","WhatsApp Business API","","open"],
+  ["in-cal","Calendar sync for interviews","","open"],
+  ["in-meet","Video interview links","Generated with the interview record","open"],
+  ["in-ga","Web analytics","","open"],
+  ["in-bmet","Government systems","BMET registration and clearance, where an interface exists","open"],
+  ["in-acct","Accounting system","","open"],
+  ["in-pay","Payment gateway","Advise against: there is nothing to charge a worker for, and the no-fee promise is the portal's strongest claim","never"],
+ ]},
+ {n:13,t:"Reach and devices",note:"Who can physically use it. The constraint that shaped most decisions already made.",rows:[
+  ["dv-resp","Responsive at every width","","built"],
+  ["dv-nojs","Usable with JavaScript off","","built"],
+  ["dv-light","Low-bandwidth pages","No framework, inline critical CSS, no web fonts on the critical path","built"],
+  ["dv-a11y","Accessibility pass","Contrast, focus states, screen-reader labels — partly there, never audited","open"],
+  ["dv-pwa","Installable web app","Home-screen icon, works offline for reading","open"],
+  ["dv-offline","Draft a profile offline","Finish it when there is signal","open"],
+  ["dv-native","Native mobile app","A large commitment; the web app answers most of the need","open"],
+ ]},
+];
+
+const KEY = {built:["Built","p-built"],open:["Open","p-open"],blocked:["Blocked","p-block"],never:["Advise against","p-never"]};
+let wants = {};
+let db = null;
+let filter = "all";
+
+function render(){
+  const board = document.getElementById("board");
+  board.innerHTML = "";
+  let total=0, built=0, open=0, never=0;
+
+  for(const d of DOMAINS){
+    const sec = document.createElement("section");
+    const wrap = document.createElement("div");
+    wrap.className = "wrap";
+
+    const head = document.createElement("div");
+    head.className = "dhead";
+    head.innerHTML = '<span class="dnum">'+String(d.n).padStart(2,"0")+'</span><h2></h2>';
+    head.querySelector("h2").textContent = d.t;
+    wrap.appendChild(head);
+
+    const note = document.createElement("p");
+    note.className = "dnote";
+    note.textContent = d.note;
+    wrap.appendChild(note);
+
+    const tw = document.createElement("div");
+    tw.className = "tw";
+    const tbl = document.createElement("table");
+    tbl.innerHTML = '<thead><tr><th class="c-f">Feature</th><th class="c-d">What it means</th><th class="c-s">Status</th><th class="c-w">Want it</th></tr></thead>';
+    const tb = document.createElement("tbody");
+
+    let shown = 0;
+
+    for(const [key,name,desc,st] of d.rows){
+      total++;
+      if(st==="built") built++; else if(st==="never") never++; else open++;
+
+      const want = !!wants[key];
+      if(filter==="open" && st==="built") continue;
+      if(filter==="built" && st!=="built") continue;
+      if(filter==="want" && !want) continue;
+      shown++;
+
+      const tr = document.createElement("tr");
+      if(want) tr.classList.add("want");
+      if(st==="never") tr.classList.add("never");
+
+      const tdF = document.createElement("td"); tdF.className="c-f";
+      const b = document.createElement("b"); b.textContent = name; tdF.appendChild(b);
+
+      const tdD = document.createElement("td"); tdD.className="c-d"; tdD.textContent = desc;
+
+      const tdS = document.createElement("td"); tdS.className="c-s";
+      const sp = document.createElement("span"); sp.className="pill "+KEY[st][1]; sp.textContent=KEY[st][0]; tdS.appendChild(sp);
+
+      const tdW = document.createElement("td"); tdW.className="c-w";
+      if(st==="built"){
+        const m = document.createElement("span"); m.className="tick off"; m.textContent="✓"; m.title="Already built";
+        m.style.color="var(--ok)"; m.style.fontWeight="800";
+        tdW.appendChild(m);
+      } else {
+        const lab = document.createElement("label"); lab.className="tick";
+        const cb = document.createElement("input"); cb.type="checkbox"; cb.checked=want;
+        cb.setAttribute("aria-label","Want "+name);
+        cb.addEventListener("change", ()=>toggle(key, cb.checked));
+        lab.appendChild(cb); tdW.appendChild(lab);
+      }
+
+      tr.append(tdF,tdD,tdS,tdW);
+      tb.appendChild(tr);
+    }
+
+    if(!shown) continue;
+    tbl.appendChild(tb); tw.appendChild(tbl); wrap.appendChild(tw);
+    sec.appendChild(wrap); board.appendChild(sec);
+  }
+
+  document.getElementById("c-total").textContent = total;
+  document.getElementById("c-built").textContent = built;
+  document.getElementById("c-open").textContent = open;
+  document.getElementById("c-never").textContent = never;
+  document.getElementById("c-sel").textContent = Object.values(wants).filter(Boolean).length;
+}
+
+async function toggle(key, on){
+  wants[key] = on;
+  render();
+  const note = document.getElementById("savenote");
+  if(!db){ note.textContent = "Not saved — this view cannot write."; return; }
+  note.textContent = "Saving…";
+  try{
+    await db.collection("wants").doc(key).set({selected:on, at:Date.now()});
+    note.textContent = "Saved.";
+    setTimeout(()=>{ if(note.textContent==="Saved.") note.textContent=""; }, 1800);
+  }catch(e){
+    note.textContent = "Could not save that tick.";
+  }
+}
+
+for(const btn of document.querySelectorAll(".seg button")){
+  btn.addEventListener("click", ()=>{
+    filter = btn.dataset.f;
+    for(const b of document.querySelectorAll(".seg button")) b.setAttribute("aria-pressed", String(b===btn));
+    render();
+  });
+}
+
+render();
+
+(async ()=>{
+  const status = document.getElementById("status");
+  try{
+    db = await window.claude?.use?.("db");
+  }catch(e){ db = null; }
+
+  if(!db){
+    status.textContent = "Ticks cannot be saved in this view — you are signed out, or this view is read-only.";
+    return;
+  }
+
+  try{
+    const snap = await db.collection("wants").get();
+    const next = {};
+    snap.forEach(doc => { const v = doc.data(); if(v && v.selected) next[doc.id] = true; });
+    wants = next;
+    render();
+    const n = Object.keys(wants).length;
+    status.textContent = n ? ("Your ticks are saved. "+n+" selected so far.") : "Tick anything you want built — it saves as you go.";
+  }catch(e){
+    status.textContent = "Could not load saved ticks. New ticks will still try to save.";
+  }
+})();
+</script>

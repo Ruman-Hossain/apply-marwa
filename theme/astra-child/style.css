@@ -1,0 +1,198 @@
+/*
+Theme Name:   Marwa Apply
+Theme URI:    https://apply.marwaoverseas.com/
+Description:  Child theme for the Marwa Overseas application portal. Inherits the marwaoverseas.com design system — palette, typography, header and footer — so the portal reads as the same product rather than a separate site.
+Author:       Md Ruman Hossain
+Template:     astra
+Version:      0.1.0
+License:      GPL-2.0-or-later
+Text Domain:  marwa-apply-theme
+*/
+
+/* -------------------------------------------------------------------------
+   Everything here is apply-portal specific. The shared design system lives
+   in assets/design.css, synced from the main site — do not edit that file by
+   hand, it is overwritten.
+   ------------------------------------------------------------------------- */
+
+/* Astra's own chrome is replaced by the main site's header and footer. */
+.site-header,
+.site-footer,
+#masthead,
+#colophon {
+	display: none !important;
+}
+
+.site-content {
+	padding: 0;
+}
+
+/* -------------------------------------------------------------------------
+   Header.
+
+   On the main site .mo-hd is fixed and transparent, because it floats over a
+   full-bleed hero and only fills in on scroll. The portal has no hero — a
+   transparent bar over a white form is unreadable — so here it is solid from
+   the first pixel and occupies its own space instead of overlapping content.
+   ------------------------------------------------------------------------- */
+
+.mo .mo-hd {
+	position: sticky;
+	top: 0;
+	background: var(--navy, #0B2239) !important;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.admin-bar .mo .mo-hd {
+	top: 32px;
+}
+
+@media (max-width: 782px) {
+	.admin-bar .mo .mo-hd {
+		top: 46px;
+	}
+}
+
+/* The footer loses the eleven sector links — those are main-site content —
+   so the grid closes up from four columns to three rather than leaving a
+   hole where the column was. */
+@media (min-width: 900px) {
+	.mo .mo-ft .top {
+		grid-template-columns: 1.6fr 1fr 1.4fr;
+	}
+}
+
+/* The portal is a form, not a brochure: narrower measure, more breathing
+   room between fields than the marketing pages use. */
+.mo .ap-shell {
+	max-width: 760px;
+	margin: 0 auto;
+	padding: 48px 20px 72px;
+}
+
+.mo .ap-card {
+	background: var(--surface, #FFFFFF);
+	border: 1px solid var(--line, #E3E0D9);
+	border-radius: 10px;
+	padding: 28px;
+}
+
+.mo .ap-card + .ap-card {
+	margin-top: 20px;
+}
+
+.mo .ap-field {
+	margin-bottom: 18px;
+}
+
+.mo .ap-field label {
+	display: block;
+	font-weight: 600;
+	font-size: 14px;
+	margin-bottom: 6px;
+	color: var(--ink, #0B2239);
+}
+
+.mo .ap-field .hint {
+	display: block;
+	font-size: 13px;
+	font-weight: 400;
+	color: var(--muted, #5B6B7C);
+	margin-top: 4px;
+}
+
+.mo .ap-field input[type="text"],
+.mo .ap-field input[type="tel"],
+.mo .ap-field input[type="email"],
+.mo .ap-field input[type="date"],
+.mo .ap-field input[type="number"],
+.mo .ap-field select,
+.mo .ap-field textarea {
+	width: 100%;
+	padding: 11px 13px;
+	border: 1px solid var(--line, #E3E0D9);
+	border-radius: 7px;
+	font: inherit;
+	font-size: 16px; /* 16px stops iOS zooming the page on focus. */
+	background: #FFFFFF;
+	color: var(--ink, #0B2239);
+}
+
+.mo .ap-field input:focus,
+.mo .ap-field select:focus,
+.mo .ap-field textarea:focus {
+	outline: 2px solid var(--accent, #A93A2C);
+	outline-offset: 1px;
+	border-color: var(--accent, #A93A2C);
+}
+
+.mo .ap-field.is-error input,
+.mo .ap-field.is-error select {
+	border-color: #B4231A;
+}
+
+.mo .ap-field .err {
+	display: block;
+	font-size: 13px;
+	color: #B4231A;
+	margin-top: 5px;
+}
+
+/* One field per row on phones; two where there is room. */
+.mo .ap-row {
+	display: grid;
+	gap: 0 18px;
+	grid-template-columns: 1fr;
+}
+
+@media (min-width: 620px) {
+	.mo .ap-row.two {
+		grid-template-columns: 1fr 1fr;
+	}
+}
+
+.mo .ap-note {
+	font-size: 14px;
+	color: var(--muted, #5B6B7C);
+	line-height: 1.6;
+}
+
+.mo .ap-msg {
+	padding: 13px 16px;
+	border-radius: 7px;
+	margin-bottom: 20px;
+	font-size: 15px;
+}
+
+.mo .ap-msg.ok {
+	background: #EDF5EE;
+	border: 1px solid #C2DCC6;
+	color: #1F5128;
+}
+
+.mo .ap-msg.bad {
+	background: #FBEDEC;
+	border: 1px solid #E8C6C2;
+	color: #8E201A;
+}
+
+/* Progress along the top of the profile, so a candidate can see how much is
+   left before they start — abandonment is highest when that is hidden. */
+.mo .ap-steps {
+	display: flex;
+	gap: 6px;
+	margin-bottom: 28px;
+	list-style: none;
+	padding: 0;
+}
+
+.mo .ap-steps li {
+	flex: 1;
+	height: 4px;
+	border-radius: 2px;
+	background: var(--line, #E3E0D9);
+}
+
+.mo .ap-steps li.done {
+	background: var(--accent, #A93A2C);
+}

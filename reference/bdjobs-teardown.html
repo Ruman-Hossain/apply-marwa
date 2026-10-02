@@ -1,0 +1,748 @@
+<title>Bdjobs Teardown for Marwa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Noto+Sans:ital,wght@0,400;0,600;0,700;1,400&family=Noto+Sans+JP:wght@400;600&display=swap">
+
+<style>
+/* Layout: one reading column for argument, full-bleed audit rows for the verdicts.
+   Palette and faces are Marwa's own design system, not a new one. */
+:root {
+  --bg: #FBFAF7;
+  --surface: #FFFFFF;
+  --alt: #F3F1EC;
+  --line: #E3E0D9;
+  --ink: #0B2239;
+  --muted: #5B6B7C;
+  --accent: #A93A2C;
+  --ok: #1F7A4D;
+  --warn: #9A6B10;
+  --display: "Manrope", "Segoe UI", system-ui, sans-serif;
+  --body: "Noto Sans", "Segoe UI", system-ui, sans-serif;
+  --jp: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0B1622;
+    --surface: #122232;
+    --alt: #16293B;
+    --line: #263E54;
+    --ink: #E8EEF4;
+    --muted: #96A9BB;
+    --accent: #E68371;
+    --ok: #55C48C;
+    --warn: #D9A441;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0B1622;
+  --surface: #122232;
+  --alt: #16293B;
+  --line: #263E54;
+  --ink: #E8EEF4;
+  --muted: #96A9BB;
+  --accent: #E68371;
+  --ok: #55C48C;
+  --warn: #D9A441;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1100px; margin: 0 auto; padding-inline: 20px; padding-block: 0; }
+.col { max-width: 68ch; }
+
+h1, h2, h3, h4 { font-family: var(--display); text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(30px, 5vw, 46px); line-height: 1.1; letter-spacing: -0.02em; font-weight: 800; }
+h2 { font-size: clamp(22px, 3vw, 28px); line-height: 1.2; letter-spacing: -0.01em; font-weight: 700; }
+h3 { font-size: 18px; line-height: 1.3; font-weight: 700; }
+p { margin: 0; }
+a { color: var(--accent); }
+
+.eyebrow {
+  font-family: var(--display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.jp { font-family: var(--jp); }
+
+/* ---------- masthead ---------- */
+header.top {
+  background: var(--ink);
+  color: #F4F7FA;
+  padding-block: clamp(40px, 7vw, 68px);
+  border-bottom: 1px solid var(--line);
+}
+:root[data-theme="dark"] header.top,
+:root:not([data-theme="light"]) header.top { background: #071019; }
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) header.top { background: #0B2239; } }
+header.top h1 { color: #FFFFFF; }
+header.top .eyebrow { color: #93A9BE; }
+header.top p { color: #C6D4E0; margin-top: 14px; }
+header.top .stack { display: flex; flex-direction: column; gap: 10px; }
+
+.meta {
+  display: flex; flex-wrap: wrap; gap: 8px 26px;
+  margin-top: 26px; padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,.16);
+  font-size: 13.5px; color: #93A9BE;
+}
+.meta b { color: #E7EFF6; font-weight: 600; }
+
+/* ---------- section rhythm ---------- */
+section { padding-block: clamp(34px, 5vw, 54px); border-bottom: 1px solid var(--line); }
+.head { display: flex; flex-direction: column; gap: 8px; margin-bottom: 26px; }
+.lede { color: var(--muted); font-size: 17px; }
+
+/* ---------- scoreboard ---------- */
+.score { display: grid; grid-template-columns: repeat(auto-fit, minmax(152px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.score div { background: var(--surface); padding: 18px 20px; }
+.score b { display: block; font-family: var(--display); font-size: 27px; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.score span { display: block; font-size: 12.5px; color: var(--muted); margin-top: 3px; }
+.score .them b { color: var(--muted); }
+.score .us b { color: var(--accent); }
+
+/* ---------- audit rows ---------- */
+.audit { display: flex; flex-direction: column; gap: 10px; }
+.row {
+  display: grid;
+  grid-template-columns: 1fr 86px;
+  gap: 10px 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  padding: 16px 18px;
+}
+.row > .what { grid-column: 1; min-width: 0; }
+.row > .verdict { grid-column: 2; justify-self: end; }
+.row .name { font-family: var(--display); font-weight: 700; font-size: 15.5px; line-height: 1.35; }
+.row .does { font-size: 14.5px; color: var(--muted); margin-top: 3px; }
+.row .why { grid-column: 1 / -1; font-size: 14.5px; margin-top: 8px; padding-top: 10px; border-top: 1px solid var(--line); }
+.row .why b { font-weight: 600; }
+
+.chip {
+  display: inline-block;
+  font-family: var(--display);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 4px 9px; border-radius: 20px; white-space: nowrap;
+  border: 1px solid currentColor;
+}
+.c-copy { color: var(--ok); }
+.c-adapt { color: var(--accent); }
+.c-skip { color: var(--muted); }
+
+.legend { display: flex; flex-wrap: wrap; gap: 10px 18px; margin-bottom: 22px; font-size: 14px; color: var(--muted); align-items: center; }
+
+/* ---------- IA spec ---------- */
+.ia { display: grid; grid-template-columns: repeat(auto-fit, minmax(265px, 1fr)); gap: 12px; }
+.ia > div { background: var(--surface); border: 1px solid var(--line); border-radius: 11px; padding: 16px 18px; min-width: 0; }
+.ia h4 { font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); margin-bottom: 9px; }
+.ia ul { margin: 0; padding-left: 18px; }
+.ia li { font-size: 14.5px; line-height: 1.55; margin-bottom: 3px; }
+.ia li .note { color: var(--muted); font-size: 13.5px; }
+.ia .drop { color: var(--muted); text-decoration: line-through; }
+
+/* ---------- build order ---------- */
+.steps { display: flex; flex-direction: column; gap: 12px; counter-reset: s; }
+.step { display: grid; grid-template-columns: 38px 1fr; gap: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 11px; padding: 16px 18px; align-items: start; }
+.step::before {
+  counter-increment: s; content: counter(s);
+  font-family: var(--display); font-weight: 800; font-size: 14px;
+  width: 30px; height: 30px; border-radius: 50%;
+  background: var(--ink); color: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+}
+:root[data-theme="dark"] .step::before, :root:not([data-theme="light"]) .step::before { color: #0B1622; background: var(--ink); }
+.step h3 { margin-bottom: 4px; }
+.step p { font-size: 14.5px; color: var(--muted); }
+
+.callout { background: var(--alt); border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 10px; padding: 16px 18px; font-size: 15px; }
+.callout strong { font-family: var(--display); }
+
+.stack-16 { display: flex; flex-direction: column; gap: 16px; }
+.stack-22 { display: flex; flex-direction: column; gap: 22px; }
+
+footer { padding-block: 34px; color: var(--muted); font-size: 14px; }
+
+@media (max-width: 560px) {
+  .row { grid-template-columns: 1fr; }
+  .row > .verdict { grid-column: 1; justify-self: start; grid-row: 1; }
+  .row > .what { grid-row: 2; }
+}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="stack col">
+      <span class="eyebrow">Competitive teardown · 1 October 2026</span>
+      <h1>What Bdjobs does, and which parts Marwa should take</h1>
+      <p>A feature-by-feature pass over Bdjobs — home, search, job cards, the posting page and the whole signed-in jobseeker panel — judged against what an overseas recruitment agency actually needs. Three verdicts: copy it, adapt it, leave it.</p>
+    </div>
+    <div class="meta">
+      <span>Reviewed <b>bdjobs.com</b> and <b>mybdjobs.bdjobs.com</b></span>
+      <span>Target <b>apply.marwaoverseas.com</b></span>
+      <span>Signed-in panel viewed on <b>Ruman's own account</b></span>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="head col">
+      <span class="eyebrow">The frame</span>
+      <h2>They are a marketplace. Marwa is the agency.</h2>
+      <p class="lede">This decides every borrowing call below, so it is worth stating plainly before the list.</p>
+    </div>
+
+    <div class="stack-22">
+      <div class="score">
+        <div class="them"><b>5,776</b><span>Bdjobs live jobs</span></div>
+        <div class="them"><b>22,489+</b><span>Bdjobs vacancies</span></div>
+        <div class="them"><b>3,405</b><span>Bdjobs companies</span></div>
+        <div class="them"><b>38</b><span>Bdjobs overseas jobs</span></div>
+        <div class="us"><b>5</b><span>Marwa vacancies today</span></div>
+      </div>
+
+      <div class="col stack-16">
+        <h3>And the number that settles it</h3>
+        <p>Their recruiter product sells access to a database of <strong>6.2 million CVs</strong>. Broken down by category, that database is this:</p>
+      </div>
+
+      <div class="score">
+        <div class="them"><b>648,237</b><span>Accounting / Finance</span></div>
+        <div class="them"><b>568,125</b><span>Banking</span></div>
+        <div class="them"><b>170,262</b><span>Call centre</span></div>
+        <div class="us"><b>2,648</b><span>Carpenter</span></div>
+        <div class="us"><b>593</b><span>Caregiver / Nanny</span></div>
+        <div class="us"><b>315</b><span>Boiler operator</span></div>
+      </div>
+
+      <div class="col">
+        <p>On the largest job site in Bangladesh, in the trades Marwa actually recruits for, the whole national database holds a few hundred people. Bdjobs is a white-collar product with a blue-collar veneer — and they know it, which is why blue-collar postings are the one thing they give away free.</p>
+      </div>
+
+      <div class="col stack-16">
+        <p>Bdjobs sells listings and access. Their product ends when a candidate hits <em>Apply Now</em> — what happens next is between the jobseeker and the employer, and Bdjobs never finds out. That is why their paid features are all about <em>visibility</em>: matching percentage, profile views, employer-interested signals, points and rewards.</p>
+
+        <p>Marwa's product <em>starts</em> where theirs ends. The licence, the employer relationship, the medical, the visa, the deployment — none of that is something a listings marketplace can do, and all of it is what a worker going to Japan or the Gulf is actually buying.</p>
+
+        <div class="callout">
+          <strong>So the rule is:</strong> match Bdjobs on everything a candidate does <em>before</em> applying, because that is the experience they are used to and anything clumsier reads as amateur. Beat them on everything after, because there they have nothing. Never compete on volume — 5 next to 5,776 is a comparison Marwa loses, so the portal should never invite it.
+        </div>
+
+        <p>One honest limit on this review: I read the jobseeker panel while Ruman was signed in. I did not open anything behind a payment, and the employer-side product I only saw from its public pages.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head col">
+      <span class="eyebrow">Area A</span>
+      <h2>Home page</h2>
+    </div>
+
+    <div class="legend">
+      <span class="chip c-copy">Copy</span> <span>take it as-is</span>
+      <span class="chip c-adapt">Adapt</span> <span>right idea, wrong shape for an agency</span>
+      <span class="chip c-skip">Skip</span> <span>belongs to their business model, not ours</span>
+    </div>
+
+    <div class="audit">
+      <div class="row">
+        <div class="what"><div class="name">Counter strip — Live Jobs / Vacancies / Companies / New Jobs</div><div class="does">Four big numbers directly under the search box.</div></div>
+        <div class="verdict"><span class="chip c-adapt">Adapt</span></div>
+        <div class="why"><b>Already done, deliberately differently.</b> Marwa's strip counts jobs and trades honestly, then spends the other two slots on <em>RL 2831</em> and <em>Dhaka &amp; Athens</em>. Five open jobs is not a boast, so the strip must carry something that is — and a verifiable licence number beats an invented total.</div>
+      </div>
+
+      <div class="row">
+        <div class="what"><div class="name">City chips with counts under the search</div><div class="does">Dhaka (4,082), Khulna (132), Sylhet (123)… one tap into a filtered list.</div></div>
+        <div class="verdict"><span class="chip c-copy">Copy</span></div>
+        <div class="why"><b>Done.</b> Ours are destinations rather than cities — Japan (4), Saudi Arabia (1) — which is the axis an overseas candidate thinks along. The count is the whole value: it answers the question before the tap, which matters on a metered connection.</div>
+      </div>
+
+      <div class="row">
+        <div class="what"><div class="name">"Discover Jobs Across Popular Category &amp; Industry" with a Category / Industry toggle</div><div class="does">Roughly 60 counted categories in three dense columns, switchable to an industry view.</div></div>
+        <div class="verdict"><span class="chip c-copy">Copy</span></div>
+        <div class="why"><b>Done as By trade / By destination.</b> The pattern that matters is one block with two ways in, not a dropdown. Scanning sixty counted rows is faster than opening a select and reading it one line at a time.</div>
+      </div>
+
+      <div class="row">
+        <div class="what"><div class="name">Quick Links rail — Deadline Tomorrow (494), Overseas Jobs (38), Work From Home (84)…</div><div class="does">Nine counted saved searches in the right rail.</div></div>
+        <div class="verdict"><span class="chip c-copy">Copy</span></div>
+        <div class="why"><b>Done.</b> These are pre-made searches someone at Bdjobs knew people actually run. Marwa's equivalents are Posted this week, Closing within 7 days, and each destination.</div>
+      </div>
+
+      <div class="row">
+        <div class="what"><div class="name">Hot Jobs — grid grouped by employer</div><div class="does">Company logo plus two or three of that company's open roles in one card.</div></div>
+        <div class="verdict"><span class="chip c-skip">Skip</span></div>
+        <div class="why"><b>Needs many employers with many roles each to make sense.</b> Marwa has a handful of employers at a time, and several of them will not want their name on a public page before an offer stage. Latest vacancies, grouped by nothing, is the honest version.</div>
+      </div>
+
+      <div class="row">
+        <div class="what"><div class="name">Govt Jobs box and the banner carousel</div><div class="does">Sponsored and rotating promotional placements.</div></div>
+        <div class="verdict"><span class="chip c-skip">Skip</span></div>
+        <div class="why"><b>That space is inventory they sell.</b> Marwa has nothing to sell there. Filling it with decoration would be worse than filling it with the licence card, which is what it carries now.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head col">
+      <span class="eyebrow">Area B</span>
+      <h2>Search and filtering</h2>
+    </div>
+
+    <div class="audit">
+      <div class="row">
+        <div class="what"><div class="name">Collapsible facet groups in a left rail</div><div class="does">Quick Filter, Category/Industry, Location, Posted/Deadline, Other Filters — each folds.</div></div>
+        <div class="verdict"><span class="chip c-copy">Copy</span></div>
+        <div class="why"><b>Done.</b> Built on <code>&lt;details&gt;</code> so it needs no JavaScript, and groups holding an active choice open themselves server-side.</div>
+      </div>
+
+      <div class="row">
+        <div class="what"><div class="name">Counts on every option</div><div class="does">Each facet value shows how many jobs sit behind it.</div></div>
+        <div class="verdict"><span class="chip c-copy">Copy</span></div>
+        <div class="why"><b>Done, and done better.</b> Bdjobs shows global counts; ours are computed against the filters already applied, so the number is exactly what you get. Options that would return nothing are not offered at all.</div>
+      </div>
+
+      <div class="row">
+        <div class="what"><div class="name">Type-to-narrow inside a long facet group</div><div class="does">A search box inside the Category group filters the option list.</div></div>
+        <div class="verdict"><span class="chip c-copy">Copy</span></div>
+        <div class="why"><b>Done.</b> Appears only on groups with eight or more options, and is inserted by script — so with JavaScript off there is no box at all, rather than a box that looks like a search and does nothing.</div>
+      </div>
+
+      <div class="row">
+        <div class="what"><div class="name">Salary, Age and Experience range sliders</div><div class="does">Three drag-handles under Quick Filter.</div></div>
+        <div class="verdict"><span class="chip c-adapt">Adapt</span></div>
+        <div class="why"><b>Sliders are the wrong control here and the data is not there yet.</b> Overseas pay is quoted in four currencies and usually "negotiable at offer stage", so a salary slider would filter on a number Marwa cannot stand behind. <b>Age</b> is worth having as a plain band, because destination countries impose real age limits. <b>Experience</b> belongs as "No experience needed" — their Fresher checkbox — which needs one new field on the job post.</div>
+      </div>
+
+      <div class="row">
+        <div class="what"><div class="name">Jobs per page, result total, and visible pagination</div><div class="does">"5,776 Jobs | 22,489+ Vacancies", page numbers, 20/50 per page.</div></div>
+        <div class="verdict"><span class="chip c-copy">Copy</span></div>
+        <div class="why"><b>Done</b>, minus the vacancy count — Marwa's job posts do not record how many positions each vacancy covers. That is one field away if you want it, and it is a genuinely useful number for a recruiter.</div>
+      </div>
+
+      <div class="row">
+        <div class="what"><div class="name">Favourite Search (saved searches)</div><div class="does">Save a filter combination and return to it; lives under Personalization.</div></div>
+        <div class="verdict"><span class="chip c-adapt">Adapt</span></div>
+        <div class="why"><b>Worth having as an alert, not a bookmark.</b> With five open jobs nobody needs to save a search — they need to be told when a sixth appears in their trade. "Email me when a welding job opens" is the version that fits Marwa.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head col">
+      <span class="eyebrow">Area C</span>
+      <h2>The job card</h2>
+      <p class="lede">The three things you flagged are all here.</p>
+    </div>
+
+    <div class="audit">
+      <div class="row">
+        <div class="what"><div class="name">Company logo on every card</div><div class="does">Logo sits right of the title; cards without one fall back to nothing.</div></div>
+        <div class="verdict"><span class="chip c-adapt">Adapt</span></div>
+        <div class="why"><b>The reason half their cards have no logo is that a logo costs ৳3,900.</b> Displaying the company logo is a paid upsell on their Premium tier — it is not that employers decline, it is that it is behind a paywall. Marwa charges nobody, so showing a mark on every card costs nothing and reads as more established than the site it was borrowed from. <b>Rule:</b> employer logo where the employer has agreed in writing, otherwise a sector mark (<span class="jp">介護</span>, <span class="jp">建設</span>, <span class="jp">ビルクリーニング</span>) — so every card has a visual anchor either way, and no card is ever blank.</div>
+      </div>
+
+      <div class="row">
+        <div class="what"><div class="name">Hover expands the card</div><div class="does">Hovering reveals the education and requirements block inline, and the card border highlights.</div></div>
+        <div class="verdict"><span class="chip c-copy">Copy</span></div>
+        <div class="why"><b>Genuinely good and not yet built.</b> It lets someone triage a list without losing their place, which is exactly what a results page is for. Two conditions: it must expand without moving its neighbours — reserve the space or overlay it — and it must have a tap equivalent, because most of this audience is on a phone where hover does not exist.</div>
+      </div>
+
+      <div class="row">
+        <div class="what"><div class="name">Icon-and-label meta row</div><div class="does">Location pin, briefcase for experience, calendar for the deadline.</div></div>
+        <div class="verdict"><span class="chip c-copy">Copy</span></div>
+        <div class="why"><b>Done.</b> Scans far faster than words joined by separators, and survives translation into Bangla without re-flowing.</div>
+      </div>
+
+      <div class="row">
+        <div class="what"><div class="name">Deadline on the card, in red</div><div class="does">Closing date shown without opening the posting.</div></div>
+        <div class="verdict"><span class="chip c-copy">Copy</span></div>
+        <div class="why"><b>Done.</b> It is the single fact that decides whether a posting is worth opening. Ours additionally turns red inside seven days.</div>
+      </div>
+
+      <div class="row">
+        <div class="what"><div class="name">Featured band above the results</div><div class="does">Paid placements in a two-column grid, marked with a star.</div></div>
+        <div class="verdict"><span class="chip c-adapt">Adapt</span></div>
+        <div class="why"><b>Built, but it must never become an ad slot.</b> On a marketplace, featured means paid. On an agency's own portal it should mean urgent — the intake closing first, the employer interviewing next week. Same component, honest meaning.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head col">
+      <span class="eyebrow">Area D</span>
+      <h2>The job posting page</h2>
+    </div>
+
+    <div class="audit">
+      <div class="row">
+        <div class="what"><div class="name">Sticky action bar — deadline, Apply Now, Save, Share, Print</div><div class="does">Follows you down the page as you read.</div></div>
+        <div class="verdict"><span class="chip c-copy">Copy</span></div>
+        <div class="why"><b>Overseas postings are long.</b> Putting Apply at the bottom of two thousand words of requirements loses people. <b>Share matters more here than it does for Bdjobs</b> — this audience passes vacancies to each other on WhatsApp, and that is Marwa's cheapest channel. Print is worth keeping too: candidates take printouts to upazila offices and to families.</div>
+      </div>
+
+      <div class="row">
+        <div class="what"><div class="name">Section tabs — All / Requirements / Responsibilities / Company Information</div><div class="does">Sticky tab strip that jumps within the posting.</div></div>
+        <div class="verdict"><span class="chip c-copy">Copy</span></div>
+        <div class="why"><b>Forces postings into a consistent shape</b>, which is the real benefit — it stops staff pasting one undifferentiated block of text. For Marwa the tabs should be <em>Requirements · The work · Pay and contract · What Marwa handles</em>, that last one being the part no marketplace can write.</div>
+      </div>
+
+      <div class="row">
+        <div class="what"><div class="name">Facts strip — Vacancy, Experience, Location, Published, Salary</div><div class="does">A fixed row of labelled values above the body text.</div></div>
+        <div class="verdict"><span class="chip c-copy">Copy</span></div>
+        <div class="why"><b>Same reason.</b> Marwa's version should carry contract length, destination, language requirement and the exams required — for Japan, naming the specific test (<span class="jp">介護技能評価試験</span>, JFT-Basic) rather than "language skills required".</div>
+      </div>
+
+      <div class="row">
+        <div class="what"><div class="name">Matching Percentage gauge</div><div class="does">Scores your profile against the posting. Paid.</div></div>
+        <div class="verdict"><span class="chip c-adapt">Adapt</span></div>
+        <div class="why"><b>Keep the idea, invert the purpose, never charge for it.</b> As a paid teaser it is a sales device. As a free, specific checklist — "You have the care certificate; you still need JFT-Basic" — it is the most useful thing on the page, and it reduces the hopeless applications Marwa staff currently have to screen out by hand.</div>
+      </div>
+
+      <div class="row">
+        <div class="what"><div class="name">Report this Job / Company, with a fraud warning in Bangla</div><div class="does">Standing warning that no employer should ever ask for money, plus a complaint phone number and email.</div></div>
+        <div class="verdict"><span class="chip c-copy">Copy</span></div>
+        <div class="why"><b>The most important single thing on their site for Marwa's audience, and the easiest to overlook.</b> Overseas recruitment fraud in Bangladesh is endemic and it is committed by people impersonating licensed agencies. A standing, prominent "Marwa never charges a jobseeker, and here is how to check our licence and report anyone claiming otherwise" protects candidates and protects the licence. <b>Build this one first.</b></div>
+      </div>
+
+      <div class="row">
+        <div class="what"><div class="name">Follow Employer</div><div class="does">Subscribe to a company's future postings.</div></div>
+        <div class="verdict"><span class="chip c-skip">Skip</span></div>
+        <div class="why"><b>Wrong relationship.</b> A candidate's relationship is with Marwa, not with a Japanese care home they have never heard of. Follow-a-trade or follow-a-destination is the same mechanic pointed somewhere useful.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head col">
+      <span class="eyebrow">Area E</span>
+      <h2>The jobseeker panel</h2>
+      <p class="lede">This is the part you asked about, and it is where Bdjobs is strongest. Their full structure, then what Marwa's should be.</p>
+    </div>
+
+    <div class="stack-22">
+      <div class="col stack-16">
+        <h3>What they have</h3>
+        <p>A persistent left rail carrying an avatar with a completeness ring, the name, and seven collapsible groups. The content area then has its own two levels: five section tabs, each with its own sub-tabs, and every panel inside is an accordion card with its own Edit and Collapse. Three levels of navigation, and it does not feel heavy, because the rail never moves.</p>
+      </div>
+
+      <div class="ia">
+        <div>
+          <h4>Their left rail</h4>
+          <ul>
+            <li>Dashboard</li>
+            <li>Manage Profile <span class="note">— Bdjobs Profile, Video CV, Customized CV, Email CV</span></li>
+            <li>Invitations <span class="note">— Video Interview, General Interview, Online Test</span></li>
+            <li>My Activities <span class="note">— Applied Jobs, Emailed CV, Shortlisted Jobs, Following Employer, Transaction Overview</span></li>
+            <li>Points &amp; Rewards <span class="note">— My Points, How do I earn Points</span></li>
+            <li>Employer Activities <span class="note">— Employer Viewed CV, Employer Message, Employer Interested</span></li>
+            <li>Personalization <span class="note">— Favourite Search, Promo Codes</span></li>
+            <li>Account Settings · Help Video · Sign Out</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Their profile sections</h4>
+          <ul>
+            <li><b>Personal Information</b> <span class="note">— Personal Details, Address Details, Career and Application, Preferred Area, Relevant Information, Disability Information</span></li>
+            <li><b>Education/Training</b> <span class="note">— Education, Training, Professional Certification</span></li>
+            <li><b>Employment</b> <span class="note">— Experience, Employment History (retired army)</span></li>
+            <li><b>Other Information</b> <span class="note">— Skill, Extracurricular, Language Proficiency, Link Account, Reference</span></li>
+            <li><b>Accomplishment</b> <span class="note">— Portfolio, Publication, Award/Honor, Project, Other</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout col">
+        <strong>Two details worth stealing outright.</strong> A <em>Profile Visibility</em> toggle (public or hidden) and an <em>Immediately Available</em> toggle, both sitting at the top of the profile. For Marwa the second one is gold: "ready to travel now" versus "available from March" is a question staff otherwise have to ask every candidate by phone.
+      </div>
+
+      <div class="col stack-16">
+        <h3>What Marwa's should be</h3>
+        <p>Their structure is built for white-collar office hiring in Bangladesh. About half of it is dead weight for a man applying to a construction job in Japan, and the half that is missing is the half that decides whether he can actually go.</p>
+      </div>
+
+      <div class="ia">
+        <div>
+          <h4>Rail</h4>
+          <ul>
+            <li>Overview <span class="note">— applications and their stage</span></li>
+            <li>My profile</li>
+            <li>My documents</li>
+            <li>My CV</li>
+            <li>Job alerts <span class="note">— new</span></li>
+            <li>Browse jobs · Sign out</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Profile sections</h4>
+          <ul>
+            <li><b>About me</b> <span class="note">— name, date of birth, district, contact, emergency contact, height and weight</span></li>
+            <li><b>My trade</b> <span class="note">— sector, trade, years, no-experience flag</span></li>
+            <li><b>Work history</b> <span class="note">— built</span></li>
+            <li><b>Languages</b> <span class="note">— Japanese level, English, exams passed and dates</span></li>
+            <li><b>Travel readiness</b> <span class="note">— passport, previous overseas work, available from</span></li>
+            <li><b>Training and certificates</b> <span class="note">— TTC, BMET, trade tests</span></li>
+            <li><b>References</b></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Dropped, and why</h4>
+          <ul>
+            <li><span class="drop">Religion, marital status</span> <span class="note">— not Marwa's to ask</span></li>
+            <li><span class="drop">Disability Information</span> <span class="note">— sensitive; only if a destination legally requires it, and then at offer stage</span></li>
+            <li><span class="drop">Retired army history</span> <span class="note">— a Bangladesh-specific hiring convention</span></li>
+            <li><span class="drop">Portfolio, Publication, Award</span> <span class="note">— white-collar furniture</span></li>
+            <li><span class="drop">Points &amp; Rewards, Promo Codes</span> <span class="note">— gamification for a marketplace</span></li>
+            <li><span class="drop">Link Account</span> <span class="note">— social profiles do not place a welder</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="col">
+        <p><b>Height, weight and blood group are not white-collar furniture</b> — they are on Bdjobs' form and they are genuinely needed for overseas placement: uniform and PPE sizing, and the medical that every destination requires. Keep those.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head col">
+      <span class="eyebrow">Area F</span>
+      <h2>CV tools</h2>
+      <p class="lede">You asked for CV creation like theirs. Here is exactly what theirs is.</p>
+    </div>
+
+    <div class="audit">
+      <div class="row">
+        <div class="what"><div class="name">"We've built a resume based on your profile" — with completeness ring, last-updated date, Download and View</div><div class="does">The structured profile is rendered into a CV automatically. No writing required.</div></div>
+        <div class="verdict"><span class="chip c-copy">Copy</span></div>
+        <div class="why"><b>Marwa already does this</b> — the generated CV exists and is linked from the account. What is missing is the framing: theirs announces itself at the top of the profile with the date and a download, so the candidate knows it exists. Ours hides behind a link. <b>That is a presentation fix, not a build.</b></div>
+      </div>
+
+      <div class="row">
+        <div class="what"><div class="name">Customized CV</div><div class="does">Choose which sections appear and generate a tailored version.</div></div>
+        <div class="verdict"><span class="chip c-adapt">Adapt</span></div>
+        <div class="why"><b>One template per destination, chosen by Marwa, not by the candidate.</b> A Japanese employer expects a different document from a Gulf employer, and the candidate has no way of knowing that — asking him to choose pushes expertise onto the person with the least of it. Marwa picks the format from the destination of the job he is applying to.</div>
+      </div>
+
+      <div class="row">
+        <div class="what"><div class="name">Video CV</div><div class="does">Record and attach a short video to the profile; employers can request one.</div></div>
+        <div class="verdict"><span class="chip c-adapt">Adapt</span></div>
+        <div class="why"><b>The strongest idea on their site for Japan specifically.</b> A thirty-second clip of a candidate greeting an employer in Japanese demonstrates something no written level ever will, and Japanese employers do ask. But it is the most expensive thing on this page: storage, upload on poor connections, and a review step so nothing unsuitable reaches an employer. <b>Phase two, and worth it.</b></div>
+      </div>
+
+      <div class="row">
+        <div class="what"><div class="name">Email CV</div><div class="does">Send your CV to an employer address from inside the panel.</div></div>
+        <div class="verdict"><span class="chip c-skip">Skip</span></div>
+        <div class="why"><b>Actively wrong for a licensed agency.</b> Marwa submits candidates to employers; a candidate mailing himself round behind the agency undercuts the relationship and the licence. Staff-side "send this shortlist to the employer" is the feature that belongs here instead.</div>
+      </div>
+
+      <div class="row">
+        <div class="what"><div class="name">Download Profile</div><div class="does">PDF of the generated CV.</div></div>
+        <div class="verdict"><span class="chip c-copy">Copy</span></div>
+        <div class="why"><b>Ours prints through the browser rather than generating a PDF server-side</b> — deliberate, because the cheap PHP PDF libraries mangle Bangla and Japanese. The browser's own Save as PDF handles both correctly. Worth a visible Download button that says so.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head col">
+      <span class="eyebrow">Area G</span>
+      <h2>Activity, signals and the upsell</h2>
+    </div>
+
+    <div class="audit">
+      <div class="row">
+        <div class="what"><div class="name">Applied Jobs</div><div class="does">List of everything applied to.</div></div>
+        <div class="verdict"><span class="chip c-copy">Copy</span></div>
+        <div class="why"><b>Done, and this is where Marwa wins outright.</b> Bdjobs can show that you applied. Marwa shows the stage — screened, shortlisted, interview, medical, visa, deployed — because Marwa is the one moving it. Theirs is a receipt; ours is a tracker.</div>
+      </div>
+
+      <div class="row">
+        <div class="what"><div class="name">Employer Viewed CV / Employer Interested / Employer Message</div><div class="does">Signals that a company looked at you.</div></div>
+        <div class="verdict"><span class="chip c-adapt">Adapt</span></div>
+        <div class="why"><b>These exist to make a free user feel watched enough to pay.</b> The honest equivalent is already in the pipeline stages — "sent to the employer" is a real event with a real date, not an engagement metric.</div>
+      </div>
+
+      <div class="row">
+        <div class="what"><div class="name">Invitations — Video Interview, General Interview, Online Test</div><div class="does">Employers schedule assessments through the panel.</div></div>
+        <div class="verdict"><span class="chip c-adapt">Adapt</span></div>
+        <div class="why"><b>The interview stage already exists in Marwa's pipeline but carries no date, time or place.</b> Adding those three fields turns a status label into something a candidate can act on, and saves staff a round of phone calls. Cheap, and the highest-value small addition on this page.</div>
+      </div>
+
+      <div class="row">
+        <div class="what"><div class="name">Points &amp; Rewards, Promo Codes, Bdjobs PRO</div><div class="does">Loyalty currency and a paid tier.</div></div>
+        <div class="verdict"><span class="chip c-skip">Skip</span></div>
+        <div class="why"><b>Marwa charging a jobseeker for anything is the exact thing the fraud warnings tell people to run from.</b> Not a close call.</div>
+      </div>
+
+      <div class="row">
+        <div class="what"><div class="name">Shortlisted Jobs (candidate-side saving)</div><div class="does">Bookmark a posting to come back to.</div></div>
+        <div class="verdict"><span class="chip c-adapt">Adapt</span></div>
+        <div class="why"><b>Low value at five open jobs</b>, rising as the board grows. Worth building when there are enough vacancies that someone cannot hold them in their head — not before.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section>
+  <div class="wrap">
+    <div class="head col">
+      <span class="eyebrow">Area H</span>
+      <h2>The employer side</h2>
+      <p class="lede">Seen from inside a real recruiter account. This is where their business model becomes visible, and it changes several calls above.</p>
+    </div>
+
+    <div class="audit">
+      <div class="row">
+        <div class="what"><div class="name">Posting a job opens a price list, not a form</div><div class="does">SME ৳500 · Standard ৳2,850 · Premium ৳3,900 · Premium Plus ৳5,900 · Hot Job ৳13,500, per job.</div></div>
+        <div class="verdict"><span class="chip c-skip">Skip</span></div>
+        <div class="why"><b>Worth knowing rather than copying.</b> Every feature on their site exists to move an employer up this ladder. Read the rest of their product with this in view and most of the "engagement" features explain themselves.</div>
+      </div>
+
+      <div class="row">
+        <div class="what"><div class="name">Blue-collar postings are free</div><div class="does">Caregiver/Nanny, Sewing machine operator, Carpenter, Plumber, Welder, Boiler Operator, Mason/Construction worker, Nurse, Deliveryman and a few more — 30 days, unlimited applicants, no charge.</div></div>
+        <div class="verdict"><span class="chip c-skip">Skip</span></div>
+        <div class="why"><b>That free list is almost exactly Marwa's trade list, and the reason it is free is that they cannot sell it.</b> It means two things. They are not a competitor for these roles — they are a noticeboard for them. And nobody is investing in making that experience good, which is the opening.</div>
+      </div>
+
+      <div class="row">
+        <div class="what"><div class="name">Company logo as a paid feature</div><div class="does">Appears first on the ৳3,900 Premium tier, alongside "vibrant job card colour".</div></div>
+        <div class="verdict"><span class="chip c-adapt">Adapt</span></div>
+        <div class="why"><b>This answers the logo question outright.</b> Their cards look inconsistent because branding is monetised, not because employers refuse it. Marwa can give every card a mark for free.</div>
+      </div>
+
+      <div class="row">
+        <div class="what"><div class="name">Post Now Pay Later — candidate details withheld until paid</div><div class="does">From ৳990: see candidate information <em>without contact details</em>, pay to unlock the ones you want.</div></div>
+        <div class="verdict"><span class="chip c-skip">Skip</span></div>
+        <div class="why"><b>Their actual product is the candidate's phone number.</b> Marwa must never sell or expose one: the agency is the channel, and a worker's details staying inside the agency is a protection worth stating on the site in as many words. <b>"Your number is never given out to employers"</b> is a true claim Bdjobs cannot make.</div>
+      </div>
+
+      <div class="row">
+        <div class="what"><div class="name">Job Dashboard — Published / Processing / Drafted, date range, search by title, Archived</div><div class="does">The employer's own list of postings in four states.</div></div>
+        <div class="verdict"><span class="chip c-copy">Copy</span></div>
+        <div class="why"><b>The state machine is the useful part.</b> Marwa's vacancies need the same shape on the staff side — drafted, open, closed to applications, filled, archived — and WP Job Manager's default published/expired is too coarse for a pipeline that runs for months.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head col">
+      <span class="eyebrow">Area I</span>
+      <h2>Talent Search</h2>
+      <p class="lede">Their candidate-search screen is the closest thing they have to Marwa's staff side.</p>
+    </div>
+
+    <div class="audit">
+      <div class="row">
+        <div class="what"><div class="name">Filter chips — Age, Experience, Industry, Edu Institute, Edu Subject, Salary</div><div class="does">Six axes across the top of a keyword search.</div></div>
+        <div class="verdict"><span class="chip c-adapt">Adapt</span></div>
+        <div class="why"><b>Three of their six axes are education.</b> For a construction job in Japan, which university someone attended is irrelevant and which exams they have passed is decisive. Marwa's axes are trade, district, years, passport status, Japanese level, available-from and destination already worked.</div>
+      </div>
+
+      <div class="row">
+        <div class="what"><div class="name">Saved Filters / Shortlisted CVs / Purchase List</div><div class="does">Three standing lists above the results.</div></div>
+        <div class="verdict"><span class="chip c-adapt">Adapt</span></div>
+        <div class="why"><b>Shortlisted CVs is the one that matters</b> — it is the shortlist pack already on Marwa's "not built yet" list, and seeing it in use confirms the shape: a persistent named list a recruiter builds across sessions, then sends. Purchase List is their billing, and has no equivalent.</div>
+      </div>
+
+      <div class="row">
+        <div class="what"><div class="name">Category grid with CV counts</div><div class="does">Every occupation with how many CVs sit behind it.</div></div>
+        <div class="verdict"><span class="chip c-copy">Copy</span></div>
+        <div class="why"><b>Marwa's staff need exactly this view of their own pool</b> — how many welders with passports are on file, how many carers hold JFT-Basic. It is the screen that answers "can we accept this demand letter?" before the answer is promised to an employer.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head col">
+      <span class="eyebrow">What to build</span>
+      <h2>Order of work</h2>
+      <p class="lede">Ranked by what it does for a candidate, not by what is quickest.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div>
+          <h3>Fraud warning and licence verification</h3>
+          <p>A standing block on every posting and in the footer: Marwa never charges a jobseeker, here is the licence number, here is how to verify it, here is how to report anyone using Marwa's name to ask for money. Cheapest thing on this list and the one that protects real people.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div>
+          <h3>Profile restructure</h3>
+          <p>The seven sections above, with the completeness ring and Download CV promoted to the top of the page the way theirs is. Adds travel readiness, exams and available-from; drops religion, marital status and the white-collar sections.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div>
+          <h3>Job posting page rebuild</h3>
+          <p>Sticky action bar with WhatsApp share and print, the four section tabs, the facts strip naming the actual exams, and the free eligibility checklist in place of their paid matching gauge.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div>
+          <h3>Interview scheduling fields</h3>
+          <p>Date, time and place on the interview stage. Three fields; removes a round of phone calls per candidate.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div>
+          <h3>Card expand, and logos</h3>
+          <p>Expand-in-place on hover with a tap equivalent. Logos need your answer first on whether employers may be named publicly — sector marks are the fallback.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div>
+          <h3>Job alerts</h3>
+          <p>Email when a vacancy opens in a candidate's trade or destination. Their Favourite Search, pointed at a board small enough that waiting is the normal state.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div>
+          <h3>Video CV</h3>
+          <p>Phase two. Highest value for Japan, highest cost in storage, upload and moderation. Worth doing properly or not at all.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap col">
+    <p>Nothing in this review proposes publishing a figure Marwa cannot stand behind. Where a Bdjobs feature depends on data Marwa does not hold — vacancy counts, salary bands, employer branding — the note says so rather than suggesting a placeholder.</p>
+  </div>
+</footer>

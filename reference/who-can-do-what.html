@@ -1,0 +1,369 @@
+<title>Who Can Do What</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Noto+Sans:wght@400;600;700&display=swap">
+
+<style>
+/* Layout: three role columns of grouped capability rows; status marked per row.
+   Palette and faces match the Bdjobs teardown and the build checklist. */
+:root {
+  --bg: #FBFAF7; --surface: #FFFFFF; --alt: #F3F1EC; --line: #E3E0D9;
+  --ink: #0B2239; --muted: #5B6B7C; --accent: #A93A2C; --ok: #1F7A4D; --warn: #9A6B10;
+  --display: "Manrope", "Segoe UI", system-ui, sans-serif;
+  --body: "Noto Sans", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#0B1622; --surface:#122232; --alt:#16293B; --line:#263E54;
+    --ink:#E8EEF4; --muted:#96A9BB; --accent:#E68371; --ok:#55C48C; --warn:#D9A441;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#0B1622; --surface:#122232; --alt:#16293B; --line:#263E54;
+  --ink:#E8EEF4; --muted:#96A9BB; --accent:#E68371; --ok:#55C48C; --warn:#D9A441;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--ink); font-family:var(--body); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+.wrap { max-width:1180px; margin:0 auto; padding-inline:20px; }
+.col { max-width:66ch; }
+h1,h2,h3,h4 { font-family:var(--display); margin:0; text-wrap:balance; }
+h1 { font-size:clamp(28px,5vw,42px); line-height:1.1; letter-spacing:-0.02em; font-weight:800; }
+h2 { font-size:clamp(20px,3vw,26px); line-height:1.2; font-weight:700; }
+h3 { font-size:17px; font-weight:700; }
+h4 { font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); font-weight:700; }
+p { margin:0; }
+a { color:var(--accent); }
+.eyebrow { font-family:var(--display); font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+
+header.top { background:#0B2239; color:#F4F7FA; padding-block:clamp(34px,6vw,56px); }
+:root[data-theme="dark"] header.top, :root:not([data-theme="light"]) header.top { background:#071019; }
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) header.top { background:#0B2239; } }
+header.top h1 { color:#fff; }
+header.top .eyebrow { color:#93A9BE; }
+header.top p { color:#C6D4E0; margin-top:12px; }
+.key { display:flex; gap:22px; flex-wrap:wrap; margin-top:24px; padding-top:18px; border-top:1px solid rgba(255,255,255,.16); font-size:13.5px; color:#93A9BE; }
+.key b { font-family:var(--display); font-weight:800; margin-right:6px; }
+.key .d { color:#4FBF87; } .key .t { color:#E68371; } .key .n { color:#93A9BE; }
+
+section { padding-block:clamp(28px,4vw,44px); border-bottom:1px solid var(--line); }
+.rolehead { display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:6px; }
+.chip { font-family:var(--display); font-size:11.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; padding:4px 10px; border-radius:20px; border:1px solid currentColor; color:var(--muted); }
+.lede { color:var(--muted); font-size:16.5px; margin-bottom:22px; }
+
+.groups { display:grid; grid-template-columns:repeat(auto-fit,minmax(310px,1fr)); gap:14px; align-items:start; }
+.group { background:var(--surface); border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+.group > h4 { padding:13px 16px; border-bottom:1px solid var(--line); background:var(--alt); margin:0; }
+ul.rows { list-style:none; margin:0; padding:0; }
+ul.rows li { display:grid; grid-template-columns:20px 1fr; gap:11px; padding:10px 16px; border-top:1px solid var(--line); align-items:start; }
+ul.rows li:first-child { border-top:0; }
+.m { font-family:var(--display); font-weight:800; font-size:13px; line-height:1.55; }
+.m-d { color:var(--ok); } .m-t { color:var(--accent); } .m-n { color:var(--muted); }
+.t { font-size:14.5px; line-height:1.5; min-width:0; }
+.t .why { display:block; color:var(--muted); font-size:13px; margin-top:2px; }
+li.todo .t > b { color:var(--accent); font-weight:600; }
+li.never .t > b { color:var(--muted); font-weight:600; }
+
+.callout { background:var(--alt); border:1px solid var(--line); border-left:3px solid var(--accent); border-radius:10px; padding:15px 17px; font-size:15px; margin-bottom:20px; }
+.callout strong { font-family:var(--display); }
+.tally { display:flex; gap:16px; flex-wrap:wrap; font-size:13.5px; color:var(--muted); margin-bottom:18px; }
+.tally span b { font-family:var(--display); color:var(--ink); }
+footer { padding-block:30px; color:var(--muted); font-size:14px; }
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <span class="eyebrow">apply.marwaoverseas.com · plugin 1.0.1</span>
+    <h1>Who can do what</h1>
+    <p class="col">Every feature in the portal, grouped by the three kinds of person who use it. The admin team splits into two levels — staff and manager — because not everyone who screens a candidate should be able to read a passport number.</p>
+    <div class="key">
+      <span><b class="d">✓</b> Built and working</span>
+      <span><b class="t">○</b> Not built yet</span>
+      <span><b class="n">—</b> Deliberately not building</span>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="rolehead">
+      <h2>Candidate</h2>
+      <span class="chip">Role: candidate</span>
+    </div>
+    <p class="lede col">A Bangladeshi worker looking for a job abroad. Most are on a cheap Android phone on a patchy connection, so nothing here needs JavaScript to work.</p>
+
+    <div class="tally"><span><b>34</b> built</span><span><b>4</b> outstanding</span><span><b>5</b> never</span></div>
+
+    <div class="groups">
+      <div class="group">
+        <h4>Getting in</h4>
+        <ul class="rows">
+          <li><span class="m m-d">✓</span><span class="t">Create an account with a mobile number and email</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Confirm the email with a code<span class="why">Code expires in 30 minutes; 8 failed attempts locks the address</span></span></li>
+          <li><span class="m m-d">✓</span><span class="t">Sign in, sign out, resend the code</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Avatar menu in the header with name and completeness</span></li>
+          <li class="todo"><span class="m m-t">○</span><span class="t"><b>Receive any of these emails</b><span class="why">Blocked — SMTP is misconfigured, so the confirmation code cannot currently be delivered</span></span></li>
+        </ul>
+      </div>
+
+      <div class="group">
+        <h4>Their profile</h4>
+        <ul class="rows">
+          <li><span class="m m-d">✓</span><span class="t">Seven sections with left-rail navigation</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Name, date of birth, district, parents' names</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Present and permanent address, emergency contact</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Height, weight, blood group<span class="why">For the medical and for the employer ordering boots — stated as such</span></span></li>
+          <li><span class="m m-d">✓</span><span class="t">Sector, trade, years of experience</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Education — add and remove rows</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Training courses</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Certificates and exams, with a type-ahead of the ones that matter</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Work history with countries and dates</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Skills with level and years</span></li>
+          <li><span class="m m-d">✓</span><span class="t">References</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Japanese and English level, passport status and number</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Ready-to-travel-from date</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Choose whether Marwa may show the file to employers</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Completeness bar, and a strip naming the next missing thing</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Age check — under 18 is refused, with the reason</span></li>
+          <li class="never"><span class="m m-n">—</span><span class="t"><b>Religion, marital status, disability</b><span class="why">On the form this was modelled on. None is Marwa's to ask.</span></span></li>
+        </ul>
+      </div>
+
+      <div class="group">
+        <h4>Documents and CV</h4>
+        <ul class="rows">
+          <li><span class="m m-d">✓</span><span class="t">Upload passport, photo, certificates, CV<span class="why">JPG, PNG, PDF only; extension and file contents must agree</span></span></li>
+          <li><span class="m m-d">✓</span><span class="t">Preview and delete their own documents</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Files stored outside the web root under random names</span></li>
+          <li><span class="m m-d">✓</span><span class="t">A CV generated from the profile — no writing needed</span></li>
+          <li><span class="m m-d">✓</span><span class="t">CV shown inside the profile page</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Download as PDF through the browser's own print<span class="why">Keeps Bangla and Japanese correct, which PHP PDF libraries do not</span></span></li>
+          <li><span class="m m-d">✓</span><span class="t">Jump from any part of the CV to the form that fills it</span></li>
+          <li class="todo"><span class="m m-t">○</span><span class="t"><b>Video CV</b><span class="why">Highest value for Japan, highest cost — storage, upload, and a review step</span></span></li>
+          <li class="never"><span class="m m-n">—</span><span class="t"><b>Email their CV to employers directly</b><span class="why">Undercuts the agency relationship the licence rests on</span></span></li>
+        </ul>
+      </div>
+
+      <div class="group">
+        <h4>Finding and applying</h4>
+        <ul class="rows">
+          <li><span class="m m-d">✓</span><span class="t">Search by trade and destination</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Filter by destination, trade, contract, closing date, posted, age, no-experience<span class="why">Every option counted, and counts respect filters already applied</span></span></li>
+          <li><span class="m m-d">✓</span><span class="t">Sort, change page size, switch list or grid</span></li>
+          <li><span class="m m-d">✓</span><span class="t">See requirements by hovering a card</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Keep a job to come back to</span></li>
+          <li><span class="m m-d">✓</span><span class="t">See what they still need before applying<span class="why">Free. Never blocks the application.</span></span></li>
+          <li><span class="m m-d">✓</span><span class="t">Apply, with a CV attached if they want</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Withdraw an application</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Follow every application through ten stages</span></li>
+          <li><span class="m m-d">✓</span><span class="t">See interview date, time and place</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Share a vacancy on WhatsApp</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Read the guides without an account</span></li>
+          <li class="todo"><span class="m m-t">○</span><span class="t"><b>Be emailed when work opens in their trade</b><span class="why">Built, shipped switched off until mail is proven</span></span></li>
+          <li class="todo"><span class="m m-t">○</span><span class="t"><b>Read any of it in Bangla</b><span class="why">Translation-ready; nothing translated</span></span></li>
+          <li class="never"><span class="m m-n">—</span><span class="t"><b>Pay for anything, ever</b><span class="why">No fees, no premium tier, no points. It is the claim the whole portal rests on.</span></span></li>
+          <li class="never"><span class="m m-n">—</span><span class="t"><b>Follow an employer</b><span class="why">Their relationship is with Marwa</span></span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="rolehead">
+      <h2>Admin team</h2>
+      <span class="chip">Roles: staff · manager</span>
+    </div>
+    <p class="lede col">Marwa's own people. Split in two: staff do the daily work of screening and moving files; managers additionally control employers, settings, and anything that counts as sensitive. Administrators get the manager set.</p>
+
+    <div class="tally"><span><b>31</b> built</span><span><b>5</b> outstanding</span><span><b>4</b> never</span></div>
+
+    <div class="groups">
+      <div class="group">
+        <h4>Candidates — staff</h4>
+        <ul class="rows">
+          <li><span class="m m-d">✓</span><span class="t">List every candidate with search on name, phone, email, trade</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Filter by sector, district, passport, Japanese level, minimum years</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Open a full candidate record</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Read work history, education, certificates, skills, references</span></li>
+          <li><span class="m m-d">✓</span><span class="t">View uploaded documents</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Open the generated CV</span></li>
+          <li><span class="m m-d">✓</span><span class="t">See every application with its full stage history</span></li>
+          <li class="never"><span class="m m-n">—</span><span class="t"><b>See passport numbers</b><span class="why">Manager only</span></span></li>
+        </ul>
+      </div>
+
+      <div class="group">
+        <h4>Applications — staff</h4>
+        <ul class="rows">
+          <li><span class="m m-d">✓</span><span class="t">List applications with candidate, job, date and office</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Move a file through ten stages</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Record why, in a permanent audit log</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Set interview date, time, place and what to bring</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Candidate is emailed on every stage change<span class="why">Blocked by the mail fault</span></span></li>
+          <li><span class="m m-d">✓</span><span class="t">Only see the office's own files<span class="why">Dhaka and Athens do not share a book of work</span></span></li>
+          <li class="todo"><span class="m m-t">○</span><span class="t"><b>Build a named shortlist and send it to an employer</b></span></li>
+        </ul>
+      </div>
+
+      <div class="group">
+        <h4>Vacancies — staff</h4>
+        <ul class="rows">
+          <li><span class="m m-d">✓</span><span class="t">Post a vacancy through a four-step wizard</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Step 1 — title, employer, destination, sector, contract type, positions, office, closing date</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Step 2 — contract length, hours, pay with a hide switch, and 17 overseas benefits</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Step 3 — age, experience, passport, languages, required exams</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Step 4 — a warning for anything missing, then open, closed, filled or archived</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Every step saves as it goes</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Decide whether the employer is named publicly on each posting</span></li>
+          <li class="todo"><span class="m m-t">○</span><span class="t"><b>Duplicate a vacancy</b><span class="why">Most postings are a near-copy of the last one</span></span></li>
+        </ul>
+      </div>
+
+      <div class="group">
+        <h4>Employers — manager</h4>
+        <ul class="rows">
+          <li><span class="m m-d">✓</span><span class="t">Create and edit employer records</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Country, city, registration number, website, description</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Contact person, email, phone</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Demand letter reference and date</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Mission attestation and recruitment agreement status</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Mark an employer as publicly nameable</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Internal notes the employer never sees</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Vacancy count per employer at a glance</span></li>
+          <li class="todo"><span class="m m-t">○</span><span class="t"><b>Upload an employer logo</b><span class="why">Cards fall back to a coloured lettermark meanwhile</span></span></li>
+        </ul>
+      </div>
+
+      <div class="group">
+        <h4>Running the business</h4>
+        <ul class="rows">
+          <li><span class="m m-d">✓</span><span class="t"><b>Who we have</b> — pool counted by trade<span class="why">On file, with passport, with Japanese, ready now, against open vacancies. Flags where demand exceeds supply.</span></span></li>
+          <li><span class="m m-d">✓</span><span class="t">Candidates by home district</span></li>
+          <li><span class="m m-d">✓</span><span class="t">System status — tables, roles, storage health</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Demo data — create and remove, with a verification audit</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Write and publish guides</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Switch job alerts on or off <span class="why">Manager</span></span></li>
+          <li><span class="m m-d">✓</span><span class="t">Set how long candidate documents are kept <span class="why">Manager · currently zero, meaning forever</span></span></li>
+          <li><span class="m m-d">✓</span><span class="t">Assign staff to Dhaka or Athens <span class="why">Manager</span></span></li>
+          <li class="todo"><span class="m m-t">○</span><span class="t"><b>Placement and conversion reporting</b><span class="why">How many applications become deployments, by trade and destination</span></span></li>
+          <li class="never"><span class="m m-n">—</span><span class="t"><b>Charge anybody for anything</b></span></li>
+          <li class="never"><span class="m m-n">—</span><span class="t"><b>Sell candidate contact details</b></span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="rolehead">
+      <h2>Employer</h2>
+      <span class="chip">Role: employer</span>
+    </div>
+    <p class="lede col">An overseas company Marwa recruits for — a Japanese care home, a Gulf contractor. They see their own vacancies and the people Marwa has put forward, and nothing else.</p>
+
+    <div class="tally"><span><b>11</b> built</span><span><b>4</b> outstanding</span><span><b>4</b> never</span></div>
+
+    <div class="callout col">
+      <strong>The one rule that shapes this whole role.</strong> An employer sees a candidate's complete professional file and CV, and never sees their phone number, email or home address. Interviews are arranged through Marwa. On the board this was modelled on, the candidate's contact details are literally the product — sold per unlocked number. Here the agency is the channel, and a worker's details staying inside it is part of what he gets for going through an agency at all.
+    </div>
+
+    <div class="groups">
+      <div class="group">
+        <h4>Their vacancies</h4>
+        <ul class="rows">
+          <li><span class="m m-d">✓</span><span class="t">Sign in and land on their own area</span></li>
+          <li><span class="m m-d">✓</span><span class="t">See every vacancy recorded against them</span></li>
+          <li><span class="m m-d">✓</span><span class="t">See candidates Marwa has put forward, per vacancy</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Trade, years, languages, availability and pipeline stage for each</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Open any candidate's full CV</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Only from "shortlisted" onward<span class="why">Marwa's screening is not the employer's business</span></span></li>
+          <li class="todo"><span class="m m-t">○</span><span class="t"><b>Say yes or no on a candidate from the portal</b><span class="why">Currently done by email or call, then recorded by staff</span></span></li>
+          <li class="todo"><span class="m m-t">○</span><span class="t"><b>Propose interview times</b></span></li>
+        </ul>
+      </div>
+
+      <div class="group">
+        <h4>Their company</h4>
+        <ul class="rows">
+          <li><span class="m m-d">✓</span><span class="t">Edit city, website, contact person and details</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Write a description candidates read before applying</span></li>
+          <li><span class="m m-d">✓</span><span class="t">See Marwa's record of them, read-only<span class="why">Name, country, registration, handling office, public-naming setting</span></span></li>
+          <li><span class="m m-d">✓</span><span class="t">See the paperwork — demand letter, attestation, agreement</span></li>
+          <li><span class="m m-d">✓</span><span class="t">Told plainly that no candidate has paid to be considered</span></li>
+          <li class="todo"><span class="m m-t">○</span><span class="t"><b>Upload their own logo and documents</b></span></li>
+          <li class="todo"><span class="m m-t">○</span><span class="t"><b>More than one contact person</b></span></li>
+          <li class="never"><span class="m m-n">—</span><span class="t"><b>Edit the compliance record</b><span class="why">A demand letter reference that can be typed over is not a record of anything</span></span></li>
+        </ul>
+      </div>
+
+      <div class="group">
+        <h4>What they can never do</h4>
+        <ul class="rows">
+          <li class="never"><span class="m m-n">—</span><span class="t"><b>Search the candidate database</b><span class="why">Marwa puts people forward; employers do not browse. This is the single biggest difference from a listings marketplace.</span></span></li>
+          <li class="never"><span class="m m-n">—</span><span class="t"><b>See a phone number, email or address</b></span></li>
+          <li class="never"><span class="m m-n">—</span><span class="t"><b>Contact a candidate directly through the portal</b></span></li>
+          <li class="never"><span class="m m-n">—</span><span class="t"><b>See another employer's vacancies or candidates</b></span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="rolehead"><h2>What is left, across all three</h2></div>
+    <p class="lede col">Thirteen things, and one of them matters more than the other twelve put together.</p>
+
+    <div class="groups">
+      <div class="group">
+        <h4>Blocking</h4>
+        <ul class="rows">
+          <li class="todo"><span class="m m-t">○</span><span class="t"><b>Outgoing mail</b><span class="why">Confirmation codes, stage notifications and alerts all go nowhere. A candidate who cannot confirm an email address cannot apply, so the portal has no working front door. Probably an unverified Brevo sender or an SMTP key where a v3 API key is wanted — I still have not seen the error text.</span></span></li>
+        </ul>
+      </div>
+
+      <div class="group">
+        <h4>Waiting on a decision from Marwa</h4>
+        <ul class="rows">
+          <li class="todo"><span class="m m-t">○</span><span class="t"><b>Document retention period</b><span class="why">The mechanism runs daily and is set to zero — keep everything forever. Nobody has chosen a number, and it should match the privacy notice.</span></span></li>
+          <li class="todo"><span class="m m-t">○</span><span class="t"><b>Which employers may be named publicly</b><span class="why">Per-employer switch exists. Until some are ticked, every card shows a lettermark rather than a logo.</span></span></li>
+          <li class="todo"><span class="m m-t">○</span><span class="t"><b>The two drafted guides</b><span class="why">Passport and medical. Both need Marwa's fees, timelines and partner centres.</span></span></li>
+        </ul>
+      </div>
+
+      <div class="group">
+        <h4>Build work</h4>
+        <ul class="rows">
+          <li class="todo"><span class="m m-t">○</span><span class="t"><b>Bangla translation</b><span class="why">The cheapest doubling of reach available. Needs a native reviewer, not a machine.</span></span></li>
+          <li class="todo"><span class="m m-t">○</span><span class="t"><b>Shortlist pack</b> — build a named list, send it to an employer</li>
+          <li class="todo"><span class="m m-t">○</span><span class="t"><b>Employer decisions in the portal</b> — accept or decline a candidate, propose interview times</span></li>
+          <li class="todo"><span class="m m-t">○</span><span class="t"><b>Employer logo and document upload</b></span></li>
+          <li class="todo"><span class="m m-t">○</span><span class="t"><b>Duplicate a vacancy</b></span></li>
+          <li class="todo"><span class="m m-t">○</span><span class="t"><b>Placement reporting</b> — applications to deployments, by trade and destination</span></li>
+          <li class="todo"><span class="m m-t">○</span><span class="t"><b>Video CV</b></span></li>
+        </ul>
+      </div>
+
+      <div class="group">
+        <h4>Before launch, not features</h4>
+        <ul class="rows">
+          <li class="todo"><span class="m m-t">○</span><span class="t">Remove the demo data and delete the build tools</li>
+          <li class="todo"><span class="m m-t">○</span><span class="t">Reset the admin display name from "DEMO ROW — build test"</span></li>
+          <li class="todo"><span class="m m-t">○</span><span class="t">Backups stored outside the web root</span></li>
+          <li class="todo"><span class="m m-t">○</span><span class="t">Two-factor on staff accounts</span></li>
+          <li class="todo"><span class="m m-t">○</span><span class="t">Decide on comments and pingbacks</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap col">
+    <p>Capabilities are enforced in code, not only hidden in the interface — a staff member who guesses the URL of a passport number still cannot read it.</p>
+  </div>
+</footer>

@@ -1,0 +1,350 @@
+<title>Marwa Portal Build Checklist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Noto+Sans:wght@400;600;700&family=Noto+Sans+JP:wght@400&display=swap">
+
+<style>
+/* Layout: status board — area blocks of checked rows, summary first.
+   Same palette and faces as the Bdjobs teardown; these are a pair. */
+:root {
+  --bg: #FBFAF7;
+  --surface: #FFFFFF;
+  --alt: #F3F1EC;
+  --line: #E3E0D9;
+  --ink: #0B2239;
+  --muted: #5B6B7C;
+  --accent: #A93A2C;
+  --ok: #1F7A4D;
+  --warn: #9A6B10;
+  --display: "Manrope", "Segoe UI", system-ui, sans-serif;
+  --body: "Noto Sans", "Segoe UI", system-ui, sans-serif;
+  --jp: "Noto Sans JP", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0B1622; --surface: #122232; --alt: #16293B; --line: #263E54;
+    --ink: #E8EEF4; --muted: #96A9BB; --accent: #E68371; --ok: #55C48C; --warn: #D9A441;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0B1622; --surface: #122232; --alt: #16293B; --line: #263E54;
+  --ink: #E8EEF4; --muted: #96A9BB; --accent: #E68371; --ok: #55C48C; --warn: #D9A441;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 1060px; margin: 0 auto; padding-inline: 20px; }
+.col { max-width: 68ch; }
+
+h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(28px, 5vw, 42px); line-height: 1.1; letter-spacing: -0.02em; font-weight: 800; }
+h2 { font-size: clamp(20px, 3vw, 25px); line-height: 1.2; font-weight: 700; }
+h3 { font-size: 15px; font-weight: 700; }
+p { margin: 0; }
+a { color: var(--accent); }
+
+.eyebrow { font-family: var(--display); font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.jp { font-family: var(--jp); }
+
+header.top { background: #0B2239; color: #F4F7FA; padding-block: clamp(36px, 6vw, 58px); }
+:root[data-theme="dark"] header.top, :root:not([data-theme="light"]) header.top { background: #071019; }
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) header.top { background: #0B2239; } }
+header.top h1 { color: #fff; }
+header.top .eyebrow { color: #93A9BE; }
+header.top p { color: #C6D4E0; margin-top: 12px; }
+
+/* progress */
+.progress { display: grid; grid-template-columns: repeat(auto-fit, minmax(128px, 1fr)); gap: 1px; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.14); border-radius: 12px; overflow: hidden; margin-top: 28px; }
+.progress div { background: #0B2239; padding: 16px 18px; }
+:root[data-theme="dark"] .progress div, :root:not([data-theme="light"]) .progress div { background: #071019; }
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) .progress div { background: #0B2239; } }
+.progress b { display: block; font-family: var(--display); font-size: 26px; line-height: 1.15; color: #fff; font-variant-numeric: tabular-nums; }
+.progress span { display: block; font-size: 12px; color: #93A9BE; margin-top: 2px; }
+
+.bar { height: 10px; border-radius: 20px; background: rgba(255,255,255,.16); overflow: hidden; margin-top: 22px; display: flex; }
+.bar i { display: block; height: 100%; }
+.bar .done { background: #4FBF87; }
+.bar .left { background: #E68371; }
+.barkey { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 10px; font-size: 13px; color: #93A9BE; }
+.barkey span::before { content: ""; display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 7px; }
+.barkey .k1::before { background: #4FBF87; }
+.barkey .k2::before { background: #E68371; }
+
+section { padding-block: clamp(30px, 4vw, 44px); border-bottom: 1px solid var(--line); }
+.head { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
+.lede { color: var(--muted); font-size: 16.5px; }
+
+/* area blocks */
+.area { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin-bottom: 14px; }
+.area > header { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; flex-wrap: wrap; padding: 15px 18px; border-bottom: 1px solid var(--line); background: var(--alt); }
+.area > header h3 { font-size: 16px; }
+.area .tally { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+ul.items { list-style: none; margin: 0; padding: 0; }
+ul.items li { display: grid; grid-template-columns: 22px 1fr; gap: 12px; padding: 10px 18px; border-top: 1px solid var(--line); align-items: start; }
+ul.items li:first-child { border-top: 0; }
+.mark { font-family: var(--display); font-weight: 800; font-size: 14px; line-height: 1.5; }
+.m-done { color: var(--ok); }
+.m-todo { color: var(--accent); }
+.m-no { color: var(--muted); }
+.txt { font-size: 14.5px; line-height: 1.55; min-width: 0; }
+.txt .why { display: block; color: var(--muted); font-size: 13.5px; margin-top: 2px; }
+li.todo .txt > strong { color: var(--accent); }
+li.no .txt > strong { color: var(--muted); font-weight: 600; }
+
+.callout { background: var(--alt); border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 10px; padding: 16px 18px; font-size: 15px; margin-bottom: 20px; }
+.callout strong { font-family: var(--display); }
+
+.stack { display: flex; flex-direction: column; gap: 16px; }
+.next { display: flex; flex-direction: column; gap: 10px; counter-reset: n; }
+.next div { display: grid; grid-template-columns: 30px 1fr; gap: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 11px; padding: 14px 17px; align-items: start; }
+.next div::before { counter-increment: n; content: counter(n); font-family: var(--display); font-weight: 800; font-size: 13px; width: 26px; height: 26px; border-radius: 50%; background: var(--ink); color: var(--bg); display: flex; align-items: center; justify-content: center; }
+.next h3 { margin-bottom: 3px; }
+.next p { font-size: 14px; color: var(--muted); }
+
+footer { padding-block: 32px; color: var(--muted); font-size: 14px; }
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <span class="eyebrow">apply.marwaoverseas.com · 1 October 2026 · plugin 0.22.0</span>
+    <h1>Build checklist</h1>
+    <p class="col">Every feature area of Bdjobs, measured against what the Marwa portal does today. Three states: built, outstanding, or deliberately not building — with the reason, because a third of this list is work we should never do.</p>
+
+    <div class="progress">
+      <div><b>78</b><span>Built</span></div>
+      <div><b>17</b><span>Outstanding</span></div>
+      <div><b>11</b><span>Won't build</span></div>
+      <div><b>1</b><span>Blocking</span></div>
+    </div>
+
+    <div class="bar">
+      <i class="done" style="width:82%"></i>
+      <i class="left" style="width:18%"></i>
+    </div>
+    <div class="barkey">
+      <span class="k1">Built — 78 of 95 planned</span>
+      <span class="k2">Outstanding — 17</span>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="callout col">
+      <strong>One thing is blocking and has been all day.</strong> Outgoing mail does not work. GoSMTP is connected to Brevo but a test send hangs, so account confirmation codes, stage-change notifications and anything else the portal emails are going nowhere. It also silently broke the demo seeder. Nothing else on this list matters as much: a candidate who cannot confirm an email address cannot apply.
+    </div>
+
+    <div class="head col">
+      <span class="eyebrow">Legend</span>
+      <p class="lede"><span class="mark m-done">✓</span> built and on the site &nbsp;·&nbsp; <span class="mark m-todo">○</span> outstanding &nbsp;·&nbsp; <span class="mark m-no">—</span> deliberately not building</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head col"><h2>Home page</h2></div>
+
+    <div class="area">
+      <header><h3>Landing</h3><span class="tally">11 built · 1 outstanding · 2 won't</span></header>
+      <ul class="items">
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Hero search</strong> — trade keyword plus destination, posting to the jobs page</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Destination chips with counts</strong> — their city chips, on the axis an overseas candidate thinks along</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Counter strip</strong><span class="why">Jobs open and trades counted from the database; the other two slots spend on RL 2831 and Dhaka &amp; Athens rather than an invented total</span></span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Browse by trade / by destination</strong> — their Category/Industry toggle, one block with two ways in</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Dense counted grid</strong> — three columns, chevrons, a count on every row</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Quick links rail</strong> — posted this week, closing within 7 days, each destination</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Latest vacancies</strong> — nine, with sector, destination and closing date</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Closing soon</strong> — days-left pill, red inside a week</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Where Marwa places people</strong> — a card per destination with its count and the trades open there</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Guides band</strong> and <strong>How it works</strong></span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Rail / content / rail layout</strong><span class="why">Required releasing the page from Astra's 1240px container, which was the real cause of the narrow layout</span></span></li>
+        <li class="todo"><span class="mark m-todo">○</span><span class="txt"><strong>Employer logo strip</strong><span class="why">Built but dormant — appears automatically once employers are marked publicly nameable. Still waiting on that decision.</span></span></li>
+        <li class="no"><span class="mark m-no">—</span><span class="txt"><strong>Hot Jobs grouped by employer</strong><span class="why">Needs many employers with many roles each; Marwa has a handful at a time and some will not be named publicly</span></span></li>
+        <li class="no"><span class="mark m-no">—</span><span class="txt"><strong>Govt Jobs box, banner carousel, ad slots</strong><span class="why">That space is inventory they sell. Marwa has nothing to sell there; it carries the licence card instead.</span></span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head col"><h2>Search, filters and the job card</h2></div>
+
+    <div class="area">
+      <header><h3>Filtering</h3><span class="tally">8 built · 2 outstanding · 1 won't</span></header>
+      <ul class="items">
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Collapsible facet groups</strong> — destination, trade, contract, closing date, posted</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Counts on every option</strong><span class="why">Better than theirs: computed against the filters already applied, so the number is exactly what you get. Options returning zero are not offered.</span></span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Type-to-narrow</strong> inside groups of eight or more</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Radio affordance</strong>, and tapping an active filter clears it</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Sort</strong> — newest, closing soonest, A–Z</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Per page</strong> 10 / 20 / 50, with the result total</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Works with JavaScript off</strong> — every filter is a link, every state is in the URL</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>"Only jobs in my trade"</strong> — uses what the candidate already told us</span></li>
+        <li class="todo"><span class="mark m-todo">○</span><span class="txt"><strong>Age band filter</strong><span class="why">Destination countries impose real age limits, so this one is worth having</span></span></li>
+        <li class="todo"><span class="mark m-todo">○</span><span class="txt"><strong>"No experience needed"</strong><span class="why">Their Fresher checkbox. Needs one new field on the job post.</span></span></li>
+        <li class="no"><span class="mark m-no">—</span><span class="txt"><strong>Salary slider</strong><span class="why">Overseas pay is quoted in four currencies and usually confirmed at offer stage; the filter would sort on a number Marwa cannot stand behind</span></span></li>
+      </ul>
+    </div>
+
+    <div class="area">
+      <header><h3>The card and the posting</h3><span class="tally">7 built · 3 outstanding</span></header>
+      <ul class="items">
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>List and grid views</strong>, list default</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>A mark on every card</strong><span class="why">Logo where uploaded, employer initials on a colour derived from the name otherwise. Their logos sit behind a ৳3,900 tier, so half their cards are blank; none of ours will be.</span></span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Hover-expands to requirements</strong><span class="why">Overlays downward so it never moves neighbouring cards; shown inline where there is no hover</span></span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Closing date on the card</strong>, red inside seven days</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Icon meta rows</strong> and an <strong>Applied</strong> marker</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Featured band</strong><span class="why">Kept, but it means urgent rather than paid — same component, honest meaning</span></span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Anti-fraud notice on every posting</strong><span class="why">The most important thing taken from their site, placed where somebody has just decided they want the job</span></span></li>
+        <li class="todo"><span class="mark m-todo">○</span><span class="txt"><strong>Sticky action bar</strong> — deadline, apply, WhatsApp share, print</span></li>
+        <li class="todo"><span class="mark m-todo">○</span><span class="txt"><strong>Posting section tabs</strong> — requirements · the work · pay and contract · what Marwa handles</span></li>
+        <li class="todo"><span class="mark m-todo">○</span><span class="txt"><strong>Free eligibility checklist</strong><span class="why">Their paid Matching Percentage, inverted: "you have the care certificate; you still need JFT-Basic". Free, specific, and it cuts the hopeless applications staff screen by hand.</span></span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head col"><h2>The candidate</h2></div>
+
+    <div class="area">
+      <header><h3>Account and profile</h3><span class="tally">17 built · 2 outstanding · 4 won't</span></header>
+      <ul class="items">
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Register, sign in, email confirmation</strong> <span class="why">Working, but the confirmation email cannot currently be delivered — see the blocker</span></span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Avatar menu in the header</strong> — their My bdjobs dropdown</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Completeness strip</strong><span class="why">Names the next missing thing rather than nagging in general, and disappears at 100%</span></span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Left rail navigation</strong> that expands into the profile's own sections</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Six profile sections</strong> — about me, trade, education and training, work history, skills and references, travel readiness</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Education</strong>, <strong>Training</strong>, <strong>Certificates and exams</strong>, <strong>Skills</strong>, <strong>References</strong> — each its own table and its own form</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Exam type-ahead</strong> — JFT-Basic, JLPT, <span class="jp">介護技能評価試験</span>, BMET, TTC, BNMC, Prometric, Dataflow</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Work history</strong> with countries and dates</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Travel readiness</strong> — passport status and number, languages, ready-to-travel-from date</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Height, weight, blood group</strong><span class="why">Framed as being for the medical and the employer ordering boots, not as something you are judged on</span></span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Father's and mother's name, addresses, emergency contact</strong> — the BMET forms ask</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Tab-safe saving</strong><span class="why">Every field falls back to what is stored when it is not submitted, so saving one tab cannot blank another — the worst thing a form like this can do</span></span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Document vault</strong> — stored outside the web root, served through a permission check, random filenames</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Document preview</strong> and CV attach when applying</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Generated CV</strong> — built from the profile, no writing required</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>CV inside the profile page</strong> with download and six jump-to-edit links</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Applications with real stages</strong><span class="why">Ten stages from received to deployed. Theirs is a receipt; this is a tracker, and it is where Marwa wins outright.</span></span></li>
+        <li class="todo"><span class="mark m-todo">○</span><span class="txt"><strong>Profile visibility toggle</strong> — their Public / hidden control</span></li>
+        <li class="todo"><span class="mark m-todo">○</span><span class="txt"><strong>Saved / shortlisted jobs</strong><span class="why">Low value at five real vacancies; worth building when the board outgrows what somebody can hold in their head</span></span></li>
+        <li class="no"><span class="mark m-no">—</span><span class="txt"><strong>Religion, marital status, disability</strong><span class="why">All three are on their form. None is Marwa's to ask a jobseeker for.</span></span></li>
+        <li class="no"><span class="mark m-no">—</span><span class="txt"><strong>Email CV</strong><span class="why">A candidate mailing himself round to employers undercuts the agency relationship the licence rests on</span></span></li>
+        <li class="no"><span class="mark m-no">—</span><span class="txt"><strong>Points, rewards, promo codes</strong><span class="why">Marwa charging a jobseeker for anything is the exact thing the fraud warnings tell people to run from</span></span></li>
+        <li class="no"><span class="mark m-no">—</span><span class="txt"><strong>Portfolio, publications, awards, linked social accounts</strong><span class="why">White-collar furniture; none of it places a welder</span></span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head col"><h2>The employer</h2></div>
+
+    <div class="area">
+      <header><h3>Employer area</h3><span class="tally">6 built · 4 outstanding · 3 won't</span></header>
+      <ul class="items">
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Employer accounts and sign-in routing</strong> — "For employers" in the nav, landing on their own page</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Vacancy list with candidates put forward</strong> — trade, experience, languages, availability, stage, CV</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Contact details withheld</strong><span class="why">The inversion of their whole model: their Post Now Pay Later tier charges per unlocked phone number. Marwa is the channel, and that is the product.</span></span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Shortlisted-onward visibility only</strong> — Marwa's screening is not the employer's business</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Company profile</strong> — editable description and contacts, read-only compliance record</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Agreement panel</strong> — demand letter, mission attestation, recruitment agreement</span></li>
+        <li class="todo"><span class="mark m-todo">○</span><span class="txt"><strong>Staff screen to create and edit employers</strong><span class="why">The real gap — Marwa staff cannot yet add an employer record from the admin</span></span></li>
+        <li class="todo"><span class="mark m-todo">○</span><span class="txt"><strong>Logo upload by the employer</strong> — staff-set only for now</span></li>
+        <li class="todo"><span class="mark m-todo">○</span><span class="txt"><strong>Multiple contact people</strong> and employer-side document upload</span></li>
+        <li class="todo"><span class="mark m-todo">○</span><span class="txt"><strong>Job state machine</strong><span class="why">Their Published / Processing / Drafted / Archived. WP Job Manager's published-or-expired is too coarse for a pipeline running for months.</span></span></li>
+        <li class="no"><span class="mark m-no">—</span><span class="txt"><strong>Packages, pricing, credits, billing</strong></span></li>
+        <li class="no"><span class="mark m-no">—</span><span class="txt"><strong>Contact-detail unlocking</strong></span></li>
+        <li class="no"><span class="mark m-no">—</span><span class="txt"><strong>Follow employer</strong><span class="why">Wrong relationship — a candidate's relationship is with Marwa, not a care home he has never heard of</span></span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head col"><h2>Staff, content and operations</h2></div>
+
+    <div class="area">
+      <header><h3>Staff tools</h3><span class="tally">6 built · 4 outstanding</span></header>
+      <ul class="items">
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Candidate list</strong> with search and filters on trade, sector, district, passport, Japanese level, experience</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Candidate detail</strong> — profile, documents, work history, every application with its full status log</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Applications screen</strong> with stage changes and an audit trail</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Dhaka / Athens office scoping</strong> on vacancies and applications</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Passport numbers gated</strong> behind a separate capability</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>System status and demo data</strong> build tools</span></li>
+        <li class="todo"><span class="mark m-todo">○</span><span class="txt"><strong>Four-step posting wizard</strong><span class="why">Job information · candidate requirements · matching and restrictions · publish. Plus benefits rewritten for overseas terms: accommodation, food, transport, annual return ticket, overtime rate, end-of-service.</span></span></li>
+        <li class="todo"><span class="mark m-todo">○</span><span class="txt"><strong>Interview scheduling</strong><span class="why">Date, time and place on the interview stage. Three fields; removes a round of phone calls per candidate.</span></span></li>
+        <li class="todo"><span class="mark m-todo">○</span><span class="txt"><strong>Shortlist pack</strong> — a named list built across sessions, then sent</span></li>
+        <li class="todo"><span class="mark m-todo">○</span><span class="txt"><strong>Pool counts by trade</strong><span class="why">Their category grid, pointed inward: how many welders with valid passports, how many carers with JFT-Basic. The screen that answers "can we accept this demand letter?" before anyone promises an employer an answer.</span></span></li>
+      </ul>
+    </div>
+
+    <div class="area">
+      <header><h3>Content and reach</h3><span class="tally">4 built · 3 outstanding</span></header>
+      <ul class="items">
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Guides section</strong> — post type, index, menu dropdown, home band</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Four guides published</strong> — fraud, Japan SSW, the employer interview, the document checklist</span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Two drafted with gaps marked</strong><span class="why">Passport and medical. Both need Marwa's fees, timelines and partner centres; writing those unverified would put false claims on a licensed agency's site.</span></span></li>
+        <li><span class="mark m-done">✓</span><span class="txt"><strong>Noindex on account pages</strong>, landing page and guides allowed to rank</span></li>
+        <li class="todo"><span class="mark m-todo">○</span><span class="txt"><strong>Bangla throughout</strong><span class="why">Doubles the portal's reach without adding a single claim. The strings are translation-ready; nothing is translated.</span></span></li>
+        <li class="todo"><span class="mark m-todo">○</span><span class="txt"><strong>Job alerts</strong> — email when a vacancy opens in your trade or destination</span></li>
+        <li class="todo"><span class="mark m-todo">○</span><span class="txt"><strong>Video CV</strong><span class="why">Highest value for Japan, highest cost: storage, upload on poor connections, and a review step so nothing unsuitable reaches an employer. Worth doing properly or not at all.</span></span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head col">
+      <span class="eyebrow">Before launch</span>
+      <h2>Not features, but blocking</h2>
+      <p class="lede">None of this is visible to a candidate. All of it will hurt if it is still true on launch day.</p>
+    </div>
+
+    <div class="area">
+      <header><h3>Outstanding</h3><span class="tally">7 items</span></header>
+      <ul class="items">
+        <li class="todo"><span class="mark m-todo">○</span><span class="txt"><strong>Fix outgoing mail</strong><span class="why">Probably an unverified Brevo sender or an SMTP key where a v3 API key is wanted. Still have not seen the actual error text.</span></span></li>
+        <li class="todo"><span class="mark m-todo">○</span><span class="txt"><strong>Remove all demo data</strong> and delete the build tools</span></li>
+        <li class="todo"><span class="mark m-todo">○</span><span class="txt"><strong>Reset the admin display name</strong><span class="why">Currently reads "DEMO ROW — build test", a side effect of the profile save during testing</span></span></li>
+        <li class="todo"><span class="mark m-todo">○</span><span class="txt"><strong>Backups</strong> stored outside the web root</span></li>
+        <li class="todo"><span class="mark m-todo">○</span><span class="txt"><strong>Two-factor for staff accounts</strong> — Wordfence already installed</span></li>
+        <li class="todo"><span class="mark m-todo">○</span><span class="txt"><strong>Data retention</strong><span class="why">The <code>delete_after</code> column exists and nothing uses it. How long are a rejected candidate's passport scans kept?</span></span></li>
+        <li class="todo"><span class="mark m-todo">○</span><span class="txt"><strong>Decide on comments and pingbacks</strong> — still switched on</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head col">
+      <span class="eyebrow">Order</span>
+      <h2>What I would do next</h2>
+    </div>
+
+    <div class="next">
+      <div><div><h3>Fix the mail</h3><p>Nothing else counts while a candidate cannot confirm an email address. Send me the error text from a GoSMTP test.</p></div></div>
+      <div><div><h3>The posting wizard</h3><p>Four steps, overseas benefits, and the requirements declaration that the free eligibility checklist is built from. Also the point after which WP Job Manager can be dropped.</p></div></div>
+      <div><div><h3>Staff employer screen</h3><p>The real gap on the employer side — staff cannot create or edit an employer record at all.</p></div></div>
+      <div><div><h3>Eligibility checklist and interview scheduling</h3><p>Both small, both remove work from staff, both are things no listings marketplace can do.</p></div></div>
+      <div><div><h3>Bangla</h3><p>The cheapest doubling of reach available, and it needs no new claims.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap col">
+    <p>Counts cover feature areas rather than commits. Anything marked "won't build" can be revisited — each one has a stated reason, and the reason is the thing to argue with.</p>
+  </div>
+</footer>

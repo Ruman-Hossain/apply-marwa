@@ -1,0 +1,21 @@
+# The Local WordPress site lives here. WordPress core, third-party plugins,
+# uploads, logs and the MySQL data directory are all inside it — none of that
+# belongs in this repo. The plugin and theme are linked in from ../plugin and
+# ../theme by a junction, so the source stays versioned and the site does not.
+/local/
+
+# Built packages. Releases are tagged; the zip is a build artefact.
+dist/*.zip
+
+# Never commit anything carrying credentials.
+.ftp-config
+deploy.local.*
+*.env
+wp-config.php
+
+# Editor and OS noise
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+*.swp
